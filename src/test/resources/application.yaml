@@ -5,12 +5,12 @@ spring:
 #  docker:
 #    compose:
 #      enabled: true
-#      file: "src/test/resources/docker-compose.yaml"
+#      file: "src/test/resources/compose.yaml"
 #      lifecycle-management: start_and_stop
   datasource:
     url: jdbc:tc:mariadb://localhost:3306/prototype?TC_INITSCRIPT=file:src/test/resources/schema.sql
-    username: ${vars.mariadb.username}
-    password: ${vars.mariadb.password}
+    username: ${vars.db.username}
+    password: ${vars.db.password}
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
     hibernate:
@@ -19,7 +19,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
 
+## Custom Values for Variables
 vars:
-  mariadb:
+  db:
     username: test
     password: test
+    table-name: test

@@ -3,7 +3,6 @@ package site.deiv70.springboot.prototype.infrastructure.secondary.model.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.Entity;
@@ -14,10 +13,9 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
 @Entity
-@Table(name = "prototype")
+@Table(name = "${vars.db.table-name}")
 public class PrototypeEntityModelJPA {
 
     @Id

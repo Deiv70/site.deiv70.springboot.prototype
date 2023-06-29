@@ -6,7 +6,7 @@ spring:
     compose:
       enabled: false
 #      enabled: true
-#      file: docker-compose.yaml
+#      file: compose.yaml
 #      lifecycle-management: start_and_stop
 
   datasource:
@@ -34,6 +34,11 @@ spring:
 ## Custom ConditionalOnProperty values
 cop:
   database-service: jpa
+
+## Custom Values for Variables
+vars:
+  db:
+    table-name: prototype
 
 springdoc:
 #  version: '@springdoc.version@'

@@ -23,9 +23,7 @@ public class PrototypeRepositoryAdapterJPA implements PrototypeRepositoryPort {
 
 	@Override
 	public Optional<PrototypeModel> getPrototypeById(UUID id) {
-		String idString = id.toString();
-
-		return prototypeEntityJPACrudRepository.findById(idString)
+		return prototypeEntityJPACrudRepository.findById(id)
 				.map(prototypeEntityMapperJPA::toPrototypeModel);
 	}
 
