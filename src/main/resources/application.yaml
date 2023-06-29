@@ -1,0 +1,63 @@
+spring:
+  config:
+    import: optional:configserver:https://configserver.deiv70.site:8888
+
+  docker:
+    compose:
+      enabled: false
+#      enabled: true
+#      file: docker-compose.yaml
+#      lifecycle-management: start_and_stop
+
+  datasource:
+    ## Reactive: R2DBC, else JDBC
+    url: jdbc:mariadb://localhost:3306/prototype
+    username: spring
+    password: spring.pwd
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+  ## Reactive
+#  webflux:
+#    base-path: /
+#  r2dbc:
+#    pool:
+#      enabled: true
+#      initial-size: 10
+#      max-size: 10
+
+## Custom ConditionalOnProperty values
+cop:
+  database-service: jpa
+
+springdoc:
+#  version: '@springdoc.version@'
+  show-actuator: true
+  use-management-port: true
+#  packages-to-scan: site.deiv70.springboot.openapitools, site.deiv70.springboot.application, site.deiv70.springboot.model, vnd.spring-boot.actuator
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    csrf:
+      enabled: true
+  api-docs:
+    path: /api-docs
+#  group-configs:
+#    - group: pet
+#      paths-to-match: /pet/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  server:
+    port: 9090
+
+server:
+  port: 8080

@@ -1,0 +1,9 @@
+
+/* DROP TABLE IF EXISTS `test`; */
+
+CREATE TABLE IF NOT EXISTS `main` (
+    `id` UUID DEFAULT uuid() NOT NULL,
+    `name` VARCHAR(30) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
