@@ -15,4 +15,8 @@ public interface PrototypeRepositoryPort {
 
     Iterable<PrototypeModel> getPrototypesByName(String name);
 
+    Optional<PrototypeModel> updatePrototypeById(PrototypeModel prototypeModel);
+
+	void deletePrototypeById(UUID id);
+
 }

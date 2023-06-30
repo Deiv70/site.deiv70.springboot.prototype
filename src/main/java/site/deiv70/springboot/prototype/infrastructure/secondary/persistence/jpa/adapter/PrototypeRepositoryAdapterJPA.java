@@ -51,4 +51,20 @@ public class PrototypeRepositoryAdapterJPA implements PrototypeRepositoryPort {
 		);
 	}
 
+	@Override
+	public Optional<PrototypeModel> updatePrototypeById(PrototypeModel prototypeModel) {
+		PrototypeEntityModelJPA prototypeEntityModelJPA = prototypeEntityMapperJPA.toPrototypeEntityModelJPA(prototypeModel);
+
+		return Optional.ofNullable(
+			prototypeEntityMapperJPA.toPrototypeModel(
+				prototypeEntityJPACrudRepository.save(prototypeEntityModelJPA)
+			)
+		);
+	}
+
+	@Override
+	public void deletePrototypeById(UUID id) {
+		prototypeEntityJPACrudRepository.deleteById(id);
+	}
+
 }
