@@ -1,9 +1,11 @@
 package site.deiv70.springboot.prototype.infrastructure.primary.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesCreationResponseDtoModel;
 
 import java.util.List;
 

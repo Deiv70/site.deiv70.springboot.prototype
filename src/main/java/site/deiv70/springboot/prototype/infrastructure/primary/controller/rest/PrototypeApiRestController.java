@@ -1,7 +1,13 @@
 package site.deiv70.springboot.prototype.infrastructure.primary.controller.rest;
 
+import lombok.AllArgsConstructor;
+import site.deiv70.springboot.prototype.application.usecase.DeletePrototypeByIdUseCase;
+import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypeByIdUseCase;
 import site.deiv70.springboot.prototype.infrastructure.primary.api.PrototypeApi;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorResponseDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeUpdateRequestDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesCreationResponseDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapper;
 
 import site.deiv70.springboot.prototype.application.usecase.CreatePrototypesUseCase;
@@ -18,14 +24,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("api/")
 public class PrototypeApiRestController implements PrototypeApi {
 
     private PrototypeDtoMapper prototypeDtoMapper;
+
     private GetPrototypeByIdUseCase getPrototypeByIdUseCase;
-    private CreatePrototypesUseCase createPrototypesUseCase;
+	private UpdatePrototypeByIdUseCase updatePrototypeByIdUseCase;
+	private DeletePrototypeByIdUseCase deletePrototypeByIdUseCase;
+
     private GetPrototypesUseCase getPrototypesUseCase;
+	private CreatePrototypesUseCase createPrototypesUseCase;
 
     @Override
     public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
@@ -39,27 +50,41 @@ public class PrototypeApiRestController implements PrototypeApi {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+	@Override
+	public ResponseEntity<PrototypeDtoModel> updatePrototypeById(UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototype) {
+		return ResponseEntity.ok().build();
+	}
+
+	@Override
+	public ResponseEntity<Void> deletePrototypeById(UUID prototypeId) {
+		return ResponseEntity.ok().build();
+	}
+
     @Override
-    public ResponseEntity<List<PrototypeDtoModel>> getPrototypes(String name, Pageable pageable) {
-        // If no name field is send: return a responseEntity 200 with responseIterable
-        if (name.isEmpty()) {
-            return ResponseEntity.ok(
-                    prototypeDtoMapper.toPrototypeDtoModelList(
-                            getPrototypesUseCase.getAllPrototypes()
-                    )
-            );
+    public ResponseEntity<PrototypesCreationResponseDtoModel> getPrototypes(String name, Pageable pageable) {
+		PrototypesCreationResponseDtoModel prototypesCreationResponseDtoModel = new PrototypesCreationResponseDtoModel();
+
+		// If no name field is send: return a responseEntity 200 with responseIterable
+        if (name == null || name.isEmpty()) {
+			prototypesCreationResponseDtoModel.setPrototypes(
+				prototypeDtoMapper.toPrototypeDtoModelList(
+					getPrototypesUseCase.getAllPrototypes()
+				)
+			);
+            return ResponseEntity.ok(prototypesCreationResponseDtoModel);
         }
 
         // Return a responseEntity 200 with responseIterable
-        return ResponseEntity.ok(
-                prototypeDtoMapper.toPrototypeDtoModelList(
-                        getPrototypesUseCase.getPrototypesByName(name)
-                )
-        );
+		prototypesCreationResponseDtoModel.setPrototypes(
+			prototypeDtoMapper.toPrototypeDtoModelList(
+				getPrototypesUseCase.getPrototypesByName(name)
+			)
+		);
+        return ResponseEntity.ok(prototypesCreationResponseDtoModel);
     }
 
     @Override
-    public ResponseEntity<List<PrototypeDtoModel>> addPrototypes(List<PrototypeDtoModel> prototypeDtoModelList) {
+    public ResponseEntity<List<PrototypeDtoModel>> createPrototypes(List<PrototypeDtoModel> prototypeDtoModelList) {
         if (prototypeDtoModelList.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -76,9 +101,5 @@ public class PrototypeApiRestController implements PrototypeApi {
                 : ResponseEntity.badRequest().build();
     }
 
-    @Override
-    public ResponseEntity<Void> deletePrototypeById(UUID prototypeId) {
-        return ResponseEntity.ok().build();
-    }
 
 }

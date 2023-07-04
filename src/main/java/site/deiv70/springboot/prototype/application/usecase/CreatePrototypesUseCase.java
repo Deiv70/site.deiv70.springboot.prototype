@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @Component
 public class CreatePrototypesUseCase {
@@ -16,8 +18,18 @@ public class CreatePrototypesUseCase {
             return null;
         }
 
-        // Set Ids to null to avoid overwriting existing prototypes
-        prototypeModelIterable.forEach(prototypeModel -> prototypeModel.setId(null));
+        // Set Ids to random if not already set
+		prototypeModelIterable.forEach(
+			prototypeModel -> {
+				if (prototypeModel.getId() == null) {
+					prototypeModel.setId(UUID.randomUUID());
+				}
+				// Assign new Id if it already exists
+				if (prototypeRepositoryPort.getPrototypeById(prototypeModel.getId()).isPresent()) {
+					prototypeModel.setId(UUID.randomUUID());
+				}
+			}
+		);
 
         return prototypeRepositoryPort.createPrototypes(prototypeModelIterable);
 

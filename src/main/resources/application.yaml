@@ -2,9 +2,9 @@ spring:
   config:
     import: optional:configserver:https://configserver.deiv70.site:8888
 
-  docker:
-    compose:
-      enabled: false
+#  docker:
+#    compose:
+#      enabled: false
 #      enabled: true
 #      file: compose.yaml
 #      lifecycle-management: start_and_stop
@@ -21,6 +21,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
+
+  security:
+    user:
+      password: 2f2489d8-0b33-4eea-a2e1-2bcc57c2826e
 
   ## Reactive
 #  webflux:
