@@ -52,6 +52,8 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 			<!-- MapStruct -->
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
+			<!-- EasyRandom -->
+		<easy-random.version>5.0.0</easy-random.version>
 			<!-- JaCoCo -->
 		<jacoco.version>0.8.10</jacoco.version>
 			<!-- OpenAPI / Swagger -->
@@ -73,7 +75,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<!-- <scope>test</scope> -->
+			<scope>test</scope>
 		</dependency>
 
 			<!-- DevTools -->
@@ -201,14 +203,21 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>${junit-jupiter.version}</version>
-			<!-- <scope>test</scope> -->
+			<scope>test</scope>
 		</dependency>
 				<!-- Mockito for JUnit 5 -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>${mockito.version}</version>
-			<!-- <scope>test</scope> -->
+			<scope>test</scope>
+		</dependency>
+				<!-- Easy Random -->
+		<dependency>
+			<groupId>org.jeasy</groupId>
+			<artifactId>easy-random-core</artifactId>
+			<version>${easy-random.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- OpenAPI / Swagger -->
@@ -361,10 +370,10 @@
 			</plugin>
 
 			<!-- GraalVM -->
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
-			</plugin>
+			</plugin> -->
 
 		</plugins>
 	</build>

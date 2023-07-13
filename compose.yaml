@@ -7,20 +7,17 @@ services:
     restart: unless-stopped
 #    hostname: mariadb.prototype.springboot.local
     environment:
-      MYSQL_DATABASE: 'prototype'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'spring'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'spring.pwd'
+      MYSQL_DATABASE: ${SPRING_APP_DATABASE_SCHEMA}
+      MYSQL_USER: ${SPRING_APP_DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${SPRING_APP_DATABASE_PASSWORD}
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'R007pwd'
     ports:
       # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
+      - ${SPRING_APP_DATABASE_PORT}:3306
 #    expose:
       # Opens ports 3306 on the container
 #      - '3306'
-      # Where our data will be persisted
     volumes:
       - prototype-mariadb-vol:/var/lib/mysql
     networks:
@@ -42,23 +39,8 @@ services:
 #      - "27017:27017"
 #    # entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
 
-#  minio:
-#    image: minio/minio
-#    ports:
-#      - "9000:9000"
-#      - "9001:9001"
-#    volumes:
-#      - minio_storage:/data
-#      - ./setup-minio.sh:/.shell/setup-minio.sh
-#    environment:
-#      MINIO_ROOT_USER: minio
-#      MINIO_ROOT_PASSWORD: zV7=Ma*GHNn#5wwW
-#    command: server --console-address ":9001" /data
-
 networks:
   prototype-net:
 
 volumes:
   prototype-mariadb-vol:
-#  minio_storage: { }
-

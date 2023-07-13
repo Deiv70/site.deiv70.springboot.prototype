@@ -10,39 +10,38 @@ spring:
 #      lifecycle-management: start_and_stop
 
   datasource:
-    ## Reactive: R2DBC, else JDBC
-    url: jdbc:mariadb://localhost:3306/prototype
-    username: spring
-    password: spring.pwd
-    driver-class-name: org.mariadb.jdbc.Driver
+    ## JDBC or R2DBC for Reactive
+    url: jdbc:${SPRING_APP_DATABASE:mariadb}://${SPRING_APP_DATABASE_HOST:localhost}:${SPRING_APP_DATABASE_PORT:3306}/${SPRING_APP_DATABASE_SCHEMA:prototype}
+    username: ${SPRING_APP_DATABASE_USERNAME:spring}
+    password: ${SPRING_APP_DATABASE_PASSWORD:spring.pwd}
+    driver-class-name: ${SPRING_APP_DATABASE_DRIVER:org.mariadb.jdbc.Driver}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${SPRING_APP_DATABASE_DDL-AUTO:update}
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
+        dialect: ${SPRING_APP_DATABASE_DIALECT:org.hibernate.dialect.MariaDBDialect}
 
   security:
     user:
       password: 2f2489d8-0b33-4eea-a2e1-2bcc57c2826e
-
   ## Reactive
 #  webflux:
 #    base-path: /
 #  r2dbc:
 #    pool:
-#      enabled: true
+#      enabled: trueSPRING_APP_ENDPOINT_SWAGGER
 #      initial-size: 10
 #      max-size: 10
 
 ## Custom ConditionalOnProperty values
 cop:
-  database-service: jpa
+  database-service: ${SPRING_APP_DATABASE_IMPLEMENTATION:jpa}
 
 ## Custom Values for Variables
-vars:
-  db:
-    table-name: prototype
+#vars:
+#  db:
+#    table-name: ${SPRING_APP_DATABASE_TABLE:prototype}
 
 springdoc:
 #  version: '@springdoc.version@'
@@ -51,7 +50,7 @@ springdoc:
 #  packages-to-scan: site.deiv70.springboot.openapitools, site.deiv70.springboot.application, site.deiv70.springboot.model, vnd.spring-boot.actuator
   swagger-ui:
     enabled: true
-    path: /swagger-ui.html
+    path: ${SPRING_APP_ENDPOINT_SWAGGER:/swagger-ui}
     csrf:
       enabled: true
   api-docs:
@@ -65,8 +64,12 @@ management:
     web:
       exposure:
         include: '*'
+      base-path: ${SPRING_APP_ENDPOINT_MANAGEMENT_PATH:/actuator}
+
   server:
-    port: 9090
+    port: ${SPRING_APP_MANAGEMENT_PORT:9090}
 
 server:
-  port: 8080
+  port: ${SPRING_APP_PORT:8080}
+  servlet:
+    context-path: ${SPRING_APP_ENDPOINT_CONTEXT_PATH:/}

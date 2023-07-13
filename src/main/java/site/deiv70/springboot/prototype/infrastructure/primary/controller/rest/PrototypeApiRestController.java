@@ -5,6 +5,7 @@ import site.deiv70.springboot.prototype.application.usecase.DeletePrototypeByIdU
 import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypeByIdUseCase;
 import site.deiv70.springboot.prototype.infrastructure.primary.api.PrototypeApi;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorResponseDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.CriteriaDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeUpdateRequestDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesCreationResponseDtoModel;
@@ -72,13 +73,21 @@ public class PrototypeApiRestController implements PrototypeApi {
 				)
 			);
             return ResponseEntity.ok(prototypesCreationResponseDtoModel);
-        }
+        } else {
+			// Return a responseEntity 200 with responseIterable
+			prototypesCreationResponseDtoModel.setPrototypes(
+				prototypeDtoMapper.toPrototypeDtoModelList(
+					getPrototypesUseCase.getPrototypesByName(name)
+				)
+			);
+		}
 
-        // Return a responseEntity 200 with responseIterable
-		prototypesCreationResponseDtoModel.setPrototypes(
-			prototypeDtoMapper.toPrototypeDtoModelList(
-				getPrototypesUseCase.getPrototypesByName(name)
-			)
+		CriteriaDtoModel criteriaDtoModel = new CriteriaDtoModel();
+		criteriaDtoModel.setPage(pageable.getPageNumber());
+		criteriaDtoModel.setSize(pageable.getPageSize());
+		criteriaDtoModel.setSort(List.of(String.valueOf(pageable.getSort())));
+		prototypesCreationResponseDtoModel.setCriteria(
+			criteriaDtoModel
 		);
         return ResponseEntity.ok(prototypesCreationResponseDtoModel);
     }
@@ -100,6 +109,5 @@ public class PrototypeApiRestController implements PrototypeApi {
                 ? ResponseEntity.ok(prototypeDtoMapper.dtoIterableToDtoList(usecaseResponseIterable))
                 : ResponseEntity.badRequest().build();
     }
-
 
 }

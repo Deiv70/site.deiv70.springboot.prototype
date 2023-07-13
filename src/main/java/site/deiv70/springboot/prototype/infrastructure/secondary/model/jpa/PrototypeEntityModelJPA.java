@@ -15,7 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "${vars.db.table-name}")
+// TODO: Make Table name configurable
+@Table(name = "prototype")
 public class PrototypeEntityModelJPA {
 
     @Id
