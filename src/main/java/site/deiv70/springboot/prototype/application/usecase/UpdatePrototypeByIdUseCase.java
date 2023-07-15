@@ -8,6 +8,7 @@ import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Optional.ofNullable;
 
@@ -17,7 +18,7 @@ public class UpdatePrototypeByIdUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	public Optional<PrototypeModel> updatePrototypeById(final PrototypeModel prototypeModel) {
+	public Optional<PrototypeModel> updatePrototypeById(final UUID prototypeId, final PrototypeModel prototypeModel) {
 		validate(prototypeModel);
 		return prototypeRepositoryPort.updatePrototypeById(prototypeModel);
 	}

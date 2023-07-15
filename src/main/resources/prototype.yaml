@@ -53,7 +53,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrototypesCreationResponseDtoModel'
+                $ref: '#/components/schemas/PrototypesPaginatedResponseDtoModel'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -107,8 +107,6 @@ paths:
         Update an Array of Existing Prototypes by Id.  
         ( If Non-Existing Id is Present, response will be "404: NotFound" ).
       operationId: updatePrototypesById
-      parameters:
-        - $ref: '#/components/parameters/id_path'
       requestBody:
         description: Prototype Updated Request
         required: true
@@ -336,6 +334,11 @@ components:
 
   schemas:
 
+#    Page:
+#      type: object
+#      format: page
+#      description: org.springframework.data.domain.Page
+
     ApiErrorResponseDtoModel:
       type: object
       properties:
@@ -379,17 +382,18 @@ components:
       xml:
         name: 'IdRequestDtoModel'
 
-    PrototypesCreationResponseDtoModel:
-      type: object
+    PrototypesPaginatedResponseDtoModel:
+#      x-spring-paginated: true
       properties:
         criteria:
           $ref: '#/components/schemas/CriteriaDtoModel'
-        prototypes:
+        content:
           type: array
+          format: page
           items:
             $ref: '#/components/schemas/PrototypeDtoModel'
       xml:
-        name: 'PrototypesCreationResponseDtoModel'
+        name: 'PrototypesPaginatedResponseDtoModel'
 
     PrototypeUpdateRequestDtoModel:
       type: object

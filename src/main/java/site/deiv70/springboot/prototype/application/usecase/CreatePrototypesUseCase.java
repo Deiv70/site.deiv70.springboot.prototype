@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -13,13 +14,13 @@ public class CreatePrototypesUseCase {
 
     private PrototypeRepositoryPort prototypeRepositoryPort;
 
-    public Iterable<PrototypeModel> createPrototypes(final Iterable<PrototypeModel> prototypeModelIterable) {
-        if ( ! prototypeModelIterable.iterator().hasNext() ) {
+    public List<PrototypeModel> createPrototypes(final List<PrototypeModel> prototypeModelList) {
+        if ( ! prototypeModelList.iterator().hasNext() ) {
             return null;
         }
 
         // Set Ids to random if not already set
-		prototypeModelIterable.forEach(
+		prototypeModelList.forEach(
 			prototypeModel -> {
 				if (prototypeModel.getId() == null) {
 					prototypeModel.setId(UUID.randomUUID());
@@ -31,7 +32,7 @@ public class CreatePrototypesUseCase {
 			}
 		);
 
-        return prototypeRepositoryPort.createPrototypes(prototypeModelIterable);
+        return prototypeRepositoryPort.createPrototypes(prototypeModelList);
 
     }
 

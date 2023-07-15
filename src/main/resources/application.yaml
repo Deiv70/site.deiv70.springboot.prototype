@@ -24,15 +24,25 @@ spring:
 
   security:
     user:
-      password: 2f2489d8-0b33-4eea-a2e1-2bcc57c2826e
+      password: ${SPRING_APP_SECURITY_PASSWORD:2f2489d8-0b33-4eea-a2e1-2bcc57c2826e}
   ## Reactive
 #  webflux:
 #    base-path: /
 #  r2dbc:
 #    pool:
-#      enabled: trueSPRING_APP_ENDPOINT_SWAGGER
+#      enabled: true
 #      initial-size: 10
 #      max-size: 10
+
+logging:
+  level:
+    root: info
+    sql: debug
+    org.hibernate: debug
+    org.hibernate.SQL: debug
+    org.hibernate.stat: debug
+#    web: info
+#    org.springframework.web: info
 
 ## Custom ConditionalOnProperty values
 cop:
@@ -71,5 +81,5 @@ management:
 
 server:
   port: ${SPRING_APP_PORT:8080}
-  servlet:
-    context-path: ${SPRING_APP_ENDPOINT_CONTEXT_PATH:/}
+#  servlet:
+#    context-path: ${SPRING_APP_ENDPOINT_CONTEXT_PATH:/}

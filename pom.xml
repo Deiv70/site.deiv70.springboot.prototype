@@ -332,6 +332,12 @@
 								<modelPackage>${project.groupId}.${project.artifactId}.model</modelPackage>
 								<configPackage>${project.groupId}.${project.artifactId}.openapitools</configPackage> -->
 							</configOptions>
+							<!-- <typeMappings>
+								<typeMapping>array+page=page</typeMapping>
+							</typeMappings>
+							<schemaMappings>
+								<schemaMapping>page=org.springframework.data.domain.Page</schemaMapping>
+							</schemaMappings> -->
 						</configuration>
 					</execution>
 				</executions>

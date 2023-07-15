@@ -1,14 +1,15 @@
 package site.deiv70.springboot.prototype.infrastructure.primary.controller.rest;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import site.deiv70.springboot.prototype.application.usecase.DeletePrototypeByIdUseCase;
 import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypeByIdUseCase;
 import site.deiv70.springboot.prototype.infrastructure.primary.api.PrototypeApi;
-import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorResponseDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.CriteriaDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeUpdateRequestDtoModel;
-import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesCreationResponseDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesPaginatedResponseDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapper;
 
 import site.deiv70.springboot.prototype.application.usecase.CreatePrototypesUseCase;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import site.deiv70.springboot.prototype.infrastructure.secondary.persistence.jpa.PrototypeEntityJPARepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +40,9 @@ public class PrototypeApiRestController implements PrototypeApi {
 
     private GetPrototypesUseCase getPrototypesUseCase;
 	private CreatePrototypesUseCase createPrototypesUseCase;
+	private final PrototypeEntityJPARepository prototypeEntityJPARepository;
 
-    @Override
+	@Override
     public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
         Optional<PrototypeDtoModel> usecaseResponseOptional =
                 getPrototypeByIdUseCase.getPrototypeById(prototypeId)
@@ -52,44 +55,68 @@ public class PrototypeApiRestController implements PrototypeApi {
     }
 
 	@Override
-	public ResponseEntity<PrototypeDtoModel> updatePrototypeById(UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototype) {
-		return ResponseEntity.ok().build();
+	public ResponseEntity<PrototypeDtoModel> updatePrototypeById(
+		UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel
+	) {
+		if (prototypeId == null || updatedPrototypeDtoModel == null) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		Optional<PrototypeDtoModel> usecaseResponseOptional =
+			updatePrototypeByIdUseCase.updatePrototypeById(
+				prototypeId,
+				prototypeDtoMapper.updatedToPrototypeModel(updatedPrototypeDtoModel)
+			)
+				.map(prototypeDtoMapper::toPrototypeDtoModel);
+
+		return usecaseResponseOptional
+			.map(ResponseEntity::ok)
+			.orElse(ResponseEntity.notFound().build());
 	}
 
 	@Override
 	public ResponseEntity<Void> deletePrototypeById(UUID prototypeId) {
+		deletePrototypeByIdUseCase.deletePrototypeById(prototypeId);
+
 		return ResponseEntity.ok().build();
 	}
 
     @Override
-    public ResponseEntity<PrototypesCreationResponseDtoModel> getPrototypes(String name, Pageable pageable) {
-		PrototypesCreationResponseDtoModel prototypesCreationResponseDtoModel = new PrototypesCreationResponseDtoModel();
+    public ResponseEntity<PrototypesPaginatedResponseDtoModel> getPrototypes(
+		String name,
+		@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+	) {
+		PrototypesPaginatedResponseDtoModel prototypesPaginatedResponseDtoModel = new PrototypesPaginatedResponseDtoModel();
+		List<PrototypeDtoModel> prototypeDtoModelList = null;
 
-		// If no name field is send: return a responseEntity 200 with responseIterable
-        if (name == null || name.isEmpty()) {
-			prototypesCreationResponseDtoModel.setPrototypes(
-				prototypeDtoMapper.toPrototypeDtoModelList(
-					getPrototypesUseCase.getAllPrototypes()
-				)
-			);
-            return ResponseEntity.ok(prototypesCreationResponseDtoModel);
+		if (name == null || name.isEmpty()) {
+			prototypeDtoModelList =
+				getPrototypesUseCase.getAllPrototypes(pageable).map(
+					prototypeDtoMapper::toPrototypeDtoModel
+				).getContent();
+
+			prototypesPaginatedResponseDtoModel.setContent(prototypeDtoModelList);
         } else {
-			// Return a responseEntity 200 with responseIterable
-			prototypesCreationResponseDtoModel.setPrototypes(
-				prototypeDtoMapper.toPrototypeDtoModelList(
-					getPrototypesUseCase.getPrototypesByName(name)
-				)
-			);
+			prototypeDtoModelList =
+				getPrototypesUseCase.getPrototypesByName(name, pageable).map(
+					prototypeDtoMapper::toPrototypeDtoModel
+				).getContent();
+
+			prototypesPaginatedResponseDtoModel.setContent(prototypeDtoModelList);
 		}
+
+		prototypesPaginatedResponseDtoModel.setContent(prototypeDtoModelList);
 
 		CriteriaDtoModel criteriaDtoModel = new CriteriaDtoModel();
 		criteriaDtoModel.setPage(pageable.getPageNumber());
 		criteriaDtoModel.setSize(pageable.getPageSize());
 		criteriaDtoModel.setSort(List.of(String.valueOf(pageable.getSort())));
-		prototypesCreationResponseDtoModel.setCriteria(
+
+		prototypesPaginatedResponseDtoModel.setCriteria(
 			criteriaDtoModel
 		);
-        return ResponseEntity.ok(prototypesCreationResponseDtoModel);
+
+		return ResponseEntity.ok(prototypesPaginatedResponseDtoModel);
     }
 
     @Override
@@ -98,15 +125,15 @@ public class PrototypeApiRestController implements PrototypeApi {
             return ResponseEntity.badRequest().build();
         }
 
-        Iterable<PrototypeDtoModel> usecaseResponseIterable = prototypeDtoMapper.toPrototypeDtoModelIterable(
+        List<PrototypeDtoModel> usecaseResponseList = prototypeDtoMapper.toPrototypeDtoModelList(
                 createPrototypesUseCase.createPrototypes(
-                        prototypeDtoMapper.toPrototypeModelIterable(prototypeDtoModelList)
+                        prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)
                 )
         );
 
         // Return a responseEntity 200 with responseIterable if it's not empty, or else return a 400
-        return usecaseResponseIterable.iterator().hasNext()
-                ? ResponseEntity.ok(prototypeDtoMapper.dtoIterableToDtoList(usecaseResponseIterable))
+        return usecaseResponseList.iterator().hasNext()
+                ? ResponseEntity.ok(usecaseResponseList)
                 : ResponseEntity.badRequest().build();
     }
 
