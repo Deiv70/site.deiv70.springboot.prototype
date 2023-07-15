@@ -102,11 +102,11 @@ paths:
     put:
       tags:
         - prototype
-      summary: Update Prototypes By ID
+      summary: Update Prototypes
       description: |
         Update an Array of Existing Prototypes by Id.  
         ( If Non-Existing Id is Present, response will be "404: NotFound" ).
-      operationId: updatePrototypesById
+      operationId: updatePrototypes
       requestBody:
         description: Prototype Updated Request
         required: true
@@ -136,11 +136,11 @@ paths:
     delete:
       tags:
         - prototype
-      summary: Delete Prototypes By ID
+      summary: Delete Prototypes
       description: |
         Delete an Array of Existing Prototypes by Id.  
         ( If Non-Existing Id is Present, response will be "404: NotFound" ).
-      operationId: deletePrototypesById
+      operationId: deletePrototypes
       requestBody:
         description: Prototype Id Array Request for Deletion
         required: true

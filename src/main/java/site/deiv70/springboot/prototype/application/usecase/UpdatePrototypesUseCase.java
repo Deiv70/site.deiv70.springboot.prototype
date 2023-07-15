@@ -7,25 +7,33 @@ import org.springframework.stereotype.Component;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
 @AllArgsConstructor
 @Component
-public class UpdatePrototypeByIdUseCase {
+public class UpdatePrototypesUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	public Optional<PrototypeModel> updatePrototypeById(final UUID prototypeId, final PrototypeModel prototypeModel) {
-		prototypeModel.setId(prototypeId);
-		validate(prototypeModel);
-		return prototypeRepositoryPort.updatePrototypeById(prototypeModel);
+	public List<PrototypeModel> updatePrototypes(List<PrototypeModel> prototypeModelList) {
+		List<PrototypeModel> updatedPrototypesList = new ArrayList<PrototypeModel>();
+
+		prototypeModelList.forEach(prototypeModel -> {
+			validate(prototypeModel);
+			updatedPrototypesList.add(
+				prototypeRepositoryPort.updatePrototypeById(prototypeModel).get()
+			);
+		});
+
+		return updatedPrototypesList;
 	}
 
-
-	private void validate(PrototypeModel prototypeModel) {
+	private void validate (PrototypeModel prototypeModel){
+		ofNullable(prototypeModel.getId())
+			.orElseThrow(IllegalAccessError::new);
 		ofNullable(prototypeModel.getName())
 			.orElseThrow(IllegalAccessError::new);
 		prototypeRepositoryPort.getPrototypeById(prototypeModel.getId())

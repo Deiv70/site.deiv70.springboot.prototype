@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface PrototypeEntityJPARepository extends JpaRepository<PrototypeEntityModelJPA, UUID> {
 
-	Page<PrototypeEntityModelJPA> findByName(String name, Pageable pageable);
+	Page<PrototypeEntityModelJPA> findByNameContaining(String name, Pageable pageable);
 
 }

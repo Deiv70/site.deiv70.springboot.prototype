@@ -48,7 +48,7 @@ public class PrototypeRepositoryAdapterJPA implements PrototypeRepositoryPort {
 
 	@Override
 	public Page<PrototypeModel> getPrototypesByName(String name, Pageable pageable) {
-		return prototypeEntityJPARepository.findByName(name, pageable)
+		return prototypeEntityJPARepository.findByNameContaining(name, pageable)
 			.map(prototypeEntityMapperJPA::toPrototypeModel);
 	}
 
