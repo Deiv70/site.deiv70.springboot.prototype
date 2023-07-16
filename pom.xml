@@ -26,7 +26,7 @@
 	</developers>
 
 	<reporting>
-		<!-- <outputDirectory>${project.build.directory}/site</outputDirectory> -->
+		<!-- Change the Default Reporting Directory: "${project.build.directory}/site" -->
 		<outputDirectory>${project.basedir}/reports</outputDirectory>
 	</reporting>
 
@@ -402,6 +402,9 @@
 					**/*MapperJPA.*,
 					**/*MapperJPAImpl.*
 				</sonar.coverage.exclusions>
+				<sonar.coverage.jacoco.xmlReportPaths>
+					${project.reporting.outputDirectory}/jacoco/jacoco.xml
+				</sonar.coverage.jacoco.xmlReportPaths>
 			</properties>
 			<build>
 				<plugins>
