@@ -25,6 +25,11 @@
 		</developer>
 	</developers>
 
+	<reporting>
+		<!-- <outputDirectory>${project.build.directory}/site</outputDirectory> -->
+		<outputDirectory>${project.basedir}/reports</outputDirectory>
+	</reporting>
+
 	<properties>
 		<java.version>17</java.version>
 		<java.source>${java.version}</java.source>
@@ -437,6 +442,7 @@
 									<goal>report</goal>
 								</goals>
 								<configuration>
+									<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
 									<formats>
 										<format>XML</format>
 										<!-- For Offline Analysis -->
