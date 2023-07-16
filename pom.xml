@@ -62,19 +62,6 @@
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<swagger-parser.version>2.1.15</swagger-parser.version>
 
-		<!-- SonarQube Config -->
-		<sonar.projectName>${project.artifactId}</sonar.projectName>
-		<sonar.projectKey>${project.artifactId}</sonar.projectKey>
-		<!-- <sonar.language>java</sonar.language> -->
-		<sonar.coverage.exclusions>
-			**/configuration/**,
-			**/config/**,
-			**/${project.name}Application.java,
-			**/*Mapper.java,
-			**/*Model.java,
-			**/*ModelJPA.java
-		</sonar.coverage.exclusions>
-
 		<!-- Switch between WebFlux (Reactive) and WebMVC (Blocking) -->
 		<web_or_webflux>web</web_or_webflux>
 		<webmvc_or_webflux>webmvc</webmvc_or_webflux>
@@ -392,6 +379,25 @@
 	<profiles>
 		<profile>
 			<id>coverage</id>
+			<properties>
+				<!-- SonarQube Config -->
+				<sonar.projectName>${project.artifactId}</sonar.projectName>
+				<sonar.projectKey>${project.artifactId}</sonar.projectKey>
+				<sonar.projectVersion>${project.version}</sonar.projectVersion>
+				<!-- <sonar.language>java</sonar.language> -->
+				<sonar.coverage.exclusions>
+					**/configuration/**,
+					**/config/**,
+					**/${project.name}Application.*,
+					**/infrastructure/primary/api/*,
+					**/*Model.*,
+					**/*ModelJPA.*,
+					**/*Mapper.*,
+					**/*MapperImpl.*,
+					**/*MapperJPA.*,
+					**/*MapperJPAImpl.*
+				</sonar.coverage.exclusions>
+			</properties>
 			<build>
 				<plugins>
 					<!-- JaCoCo -->
@@ -401,12 +407,21 @@
 						<version>${jacoco.version}</version>
 						<configuration>
 							<excludes>
+								<!-- For Config Files -->
 								<exclude>**/configuration/**</exclude>
 								<exclude>**/config/**</exclude>
-								<exclude>**/${project.name}Application.java</exclude>
-								<exclude>**/*Mapper.java</exclude>
-								<exclude>**/*Model.java</exclude>
-								<exclude>**/*ModelJPA.java</exclude>
+								<!-- For Spring Boot MainApplication -->
+								<exclude>**/${project.name}Application.*</exclude>
+								<!-- For OpenAPI Generator -->
+								<exclude>**/infrastructure/primary/api/*</exclude>
+								<!-- For Lombok Model -->
+								<exclude>**/*Model.*</exclude>
+								<exclude>**/*ModelJPA.*</exclude>
+								<!-- For MapStruct Mappers -->
+								<exclude>**/*Mapper.*</exclude>
+								<exclude>**/*MapperImpl.*</exclude>
+								<exclude>**/*MapperJPA.*</exclude>
+								<exclude>**/*MapperJPAImpl.*</exclude>
 							</excludes>
 						</configuration>
 						<executions>
@@ -424,6 +439,8 @@
 								<configuration>
 									<formats>
 										<format>XML</format>
+										<!-- For Offline Analysis -->
+										<format>HTML</format>
 									</formats>
 								</configuration>
 							</execution>
