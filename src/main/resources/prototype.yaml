@@ -5,6 +5,8 @@ info:
     This is a sample API definition
   contact:
     email: david.gomez.garcia.000@gmail.com
+    name: David Gomez Garcia (Deiv70)
+    url: https://github.com/Deiv70
 #  termsOfService: http://swagger.io/terms/
 #  license:
 #    name: Apache 2.0
@@ -12,8 +14,8 @@ info:
   version: 0.0.1-SNAPSHOT
 
 externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+  description: View this Proyect on GitHub
+  url: https://github.com/Deiv70/site.deiv70.springboot.prototype
 
 servers:
   - url: http://localhost:8080/api
@@ -422,9 +424,42 @@ components:
         description:
           type: string
           example: This is the description of the prototype
+        subPrototypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubPrototypeDtoModel'
+        created-at:
+          readOnly: true
+          type: string
+          format: date-time-instant
+          example: '2020-01-01T00:00:00.000Z'
+        last-modified-at:
+          readOnly: true
+          type: string
+          format: date-time-instant
+          example: '2020-01-01T00:00:00.000Z'
       xml:
         name: 'PrototypeDtoModel'
 
+    SubPrototypeDtoModel:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 223e4567-e89b-12d3-a456-426655440000
+        name:
+          readOnly: true
+          type: string
+          example: SubPrototype name
+        description:
+          readOnly: true
+          type: string
+          example: This is the description of the SubPrototype
+      xml:
+        name: 'SubPrototypeDtoModel'
 
 #    Tag:
 #      type: object

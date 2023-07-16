@@ -2,9 +2,22 @@
 /* DROP TABLE IF EXISTS `prototype`; */
 
 CREATE TABLE IF NOT EXISTS `prototype` (
-    `id` UUID DEFAULT uuid() NOT NULL,
+    `id` UUID DEFAULT uuid() NOT NULL
+        PRIMARY KEY,
     `name` VARCHAR(30) NOT NULL,
     `description` VARCHAR(100) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    `last_modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP
 
-    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/* DROP TABLE IF EXISTS `subprototype`; */
+
+CREATE TABLE IF NOT EXISTS `subprototype` (
+    `id` UUID DEFAULT uuid() NOT NULL PRIMARY KEY,
+    `name` VARCHAR(30) NOT NULL,
+    `description` VARCHAR(100) NOT NULL,
+    `prototype_id` UUID NOT NULL
+        REFERENCES prototype(id)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

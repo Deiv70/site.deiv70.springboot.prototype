@@ -14,7 +14,7 @@
 	<artifactId>prototype</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>prototype</name>
+	<name>Prototype</name>
 	<description>Prototype Project [ Spring Boot 3 : DDD + Hexagonal + Data JPA + Swagger (OpenAPI) + REST Web ]</description>
 
 	<developers>
@@ -61,6 +61,19 @@
 		<openapi-generator.version>6.6.0</openapi-generator.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<swagger-parser.version>2.1.15</swagger-parser.version>
+
+		<!-- SonarQube Config -->
+		<sonar.projectName>${project.artifactId}</sonar.projectName>
+		<sonar.projectKey>${project.artifactId}</sonar.projectKey>
+		<!-- <sonar.language>java</sonar.language> -->
+		<sonar.coverage.exclusions>
+			**/configuration/**,
+			**/config/**,
+			**/${project.name}Application.java,
+			**/*Mapper.java,
+			**/*Model.java,
+			**/*ModelJPA.java
+		</sonar.coverage.exclusions>
 
 		<!-- Switch between WebFlux (Reactive) and WebMVC (Blocking) -->
 		<web_or_webflux>web</web_or_webflux>
@@ -332,10 +345,14 @@
 								<modelPackage>${project.groupId}.${project.artifactId}.model</modelPackage>
 								<configPackage>${project.groupId}.${project.artifactId}.openapitools</configPackage> -->
 							</configOptions>
-							<!-- <typeMappings>
-								<typeMapping>array+page=page</typeMapping>
+							<typeMappings>
+								<typeMapping>date-time-instant=Instant</typeMapping>
+								<!-- <typeMapping>array+page=page</typeMapping> -->
 							</typeMappings>
-							<schemaMappings>
+							<importMappings>
+								<importMapping>Instant=java.time.Instant</importMapping>
+							</importMappings>
+							<!-- <schemaMappings>
 								<schemaMapping>page=org.springframework.data.domain.Page</schemaMapping>
 							</schemaMappings> -->
 						</configuration>
@@ -363,18 +380,6 @@
 				</executions>
 			</plugin>
 
-			<!-- JaCoCo -->
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<configuration>
-					<excludes>
-						<exclude>**/config/*</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-
 			<!-- GraalVM -->
 			<!-- <plugin>
 				<groupId>org.graalvm.buildtools</groupId>
@@ -383,5 +388,50 @@
 
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<!-- JaCoCo -->
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<configuration>
+							<excludes>
+								<exclude>**/configuration/**</exclude>
+								<exclude>**/config/**</exclude>
+								<exclude>**/${project.name}Application.java</exclude>
+								<exclude>**/*Mapper.java</exclude>
+								<exclude>**/*Model.java</exclude>
+								<exclude>**/*ModelJPA.java</exclude>
+							</excludes>
+						</configuration>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<formats>
+										<format>XML</format>
+									</formats>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

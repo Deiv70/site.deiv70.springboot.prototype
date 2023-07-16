@@ -49,13 +49,13 @@ public class PrototypeApiRestController implements PrototypeApi {
 		}
 
         Optional<PrototypeDtoModel> usecaseResponseOptional =
-                getPrototypeByIdUseCase.getPrototypeById(prototypeId)
-                        .map(prototypeDtoMapper::toPrototypeDtoModel);
+			getPrototypeByIdUseCase.getPrototypeById(prototypeId)
+				.map(prototypeDtoMapper::toPrototypeDtoModel);
 
         // Return a responseEntity 200 with usecaseResponseOptional if it's present, or else return a 404
         return usecaseResponseOptional
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 	@Override
