@@ -31,51 +31,48 @@ import java.util.UUID;
 @RequestMapping("api/")
 public class PrototypeApiRestController implements PrototypeApi {
 
-    private PrototypeDtoMapper prototypeDtoMapper;
+	private PrototypeDtoMapper prototypeDtoMapper;
 
-    private GetPrototypeByIdUseCase getPrototypeByIdUseCase;
+	private GetPrototypeByIdUseCase getPrototypeByIdUseCase;
 	private UpdatePrototypeByIdUseCase updatePrototypeByIdUseCase;
 	private DeletePrototypeByIdUseCase deletePrototypeByIdUseCase;
 
-    private GetPrototypesUseCase getPrototypesUseCase;
+	private GetPrototypesUseCase getPrototypesUseCase;
 	private CreatePrototypesUseCase createPrototypesUseCase;
 	private UpdatePrototypesUseCase updatePrototypesUseCase;
 	private DeletePrototypesUseCase deletePrototypesUseCase;
 
 	@Override
-    public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
+	public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
 		if (prototypeId == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<PrototypeDtoModel> usecaseResponseOptional =
-			getPrototypeByIdUseCase.getPrototypeById(prototypeId)
+		Optional<PrototypeDtoModel> usecaseResponseOptional = getPrototypeByIdUseCase.getPrototypeById(prototypeId)
 				.map(prototypeDtoMapper::toPrototypeDtoModel);
 
-        // Return a responseEntity 200 with usecaseResponseOptional if it's present, or else return a 404
-        return usecaseResponseOptional
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+		// Return a responseEntity 200 with usecaseResponseOptional if it's present, or
+		// else return a 404
+		return usecaseResponseOptional
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
 	@Override
 	public ResponseEntity<PrototypeDtoModel> updatePrototypeById(
-		UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel
-	) {
+			UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel) {
 		if (prototypeId == null || updatedPrototypeDtoModel == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<PrototypeDtoModel> usecaseResponseOptional =
-			updatePrototypeByIdUseCase.updatePrototypeById(
+		Optional<PrototypeDtoModel> usecaseResponseOptional = updatePrototypeByIdUseCase.updatePrototypeById(
 				prototypeId,
-				prototypeDtoMapper.updatedToPrototypeModel(updatedPrototypeDtoModel)
-			)
+				prototypeDtoMapper.updatedToPrototypeModel(updatedPrototypeDtoModel))
 				.map(prototypeDtoMapper::toPrototypeDtoModel);
 
 		return usecaseResponseOptional
-			.map(ResponseEntity::ok)
-			.orElse(ResponseEntity.notFound().build());
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@Override
@@ -89,24 +86,19 @@ public class PrototypeApiRestController implements PrototypeApi {
 		return ResponseEntity.ok().build();
 	}
 
-    @Override
-    public ResponseEntity<PrototypesPaginatedResponseDtoModel> getPrototypes(
-		String name,
-		@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
-	) {
+	@Override
+	public ResponseEntity<PrototypesPaginatedResponseDtoModel> getPrototypes(
+			String name,
+			@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
 		PrototypesPaginatedResponseDtoModel prototypesPaginatedResponseDtoModel = new PrototypesPaginatedResponseDtoModel();
 		List<PrototypeDtoModel> prototypeDtoModelList = null;
 
 		if (name == null || name.isEmpty()) {
-			prototypeDtoModelList =
-				getPrototypesUseCase.getAllPrototypes(pageable).map(
-					prototypeDtoMapper::toPrototypeDtoModel
-				).getContent();
-        } else {
-			prototypeDtoModelList =
-				getPrototypesUseCase.getPrototypesByName(name, pageable).map(
-					prototypeDtoMapper::toPrototypeDtoModel
-				).getContent();
+			prototypeDtoModelList = getPrototypesUseCase.getAllPrototypes(pageable).map(
+					prototypeDtoMapper::toPrototypeDtoModel).getContent();
+		} else {
+			prototypeDtoModelList = getPrototypesUseCase.getPrototypesByName(name, pageable).map(
+					prototypeDtoMapper::toPrototypeDtoModel).getContent();
 		}
 
 		prototypesPaginatedResponseDtoModel.setContent(prototypeDtoModelList);
@@ -117,29 +109,27 @@ public class PrototypeApiRestController implements PrototypeApi {
 		criteriaDtoModel.setSort(List.of(String.valueOf(pageable.getSort())));
 
 		prototypesPaginatedResponseDtoModel.setCriteria(
-			criteriaDtoModel
-		);
+				criteriaDtoModel);
 
 		return ResponseEntity.ok(prototypesPaginatedResponseDtoModel);
-    }
+	}
 
-    @Override
-    public ResponseEntity<List<PrototypeDtoModel>> createPrototypes(List<PrototypeDtoModel> prototypeDtoModelList) {
-        if (prototypeDtoModelList.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
+	@Override
+	public ResponseEntity<List<PrototypeDtoModel>> createPrototypes(List<PrototypeDtoModel> prototypeDtoModelList) {
+		if (prototypeDtoModelList.isEmpty()) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        List<PrototypeDtoModel> usecaseResponseList = prototypeDtoMapper.toPrototypeDtoModelList(
-                createPrototypesUseCase.createPrototypes(
-                        prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)
-                )
-        );
+		List<PrototypeDtoModel> usecaseResponseList = prototypeDtoMapper.toPrototypeDtoModelList(
+				createPrototypesUseCase.createPrototypes(
+						prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)));
 
-        // Return a responseEntity 200 with responseIterable if it's not empty, or else return a 400
-        return usecaseResponseList.iterator().hasNext()
-                ? ResponseEntity.ok(usecaseResponseList)
-                : ResponseEntity.badRequest().build();
-    }
+		// Return a responseEntity 200 with responseIterable if it's not empty, or else
+		// return a 400
+		return usecaseResponseList.iterator().hasNext()
+				? ResponseEntity.ok(usecaseResponseList)
+				: ResponseEntity.badRequest().build();
+	}
 
 	@Override
 	public ResponseEntity<Void> deletePrototypes(List<IdRequestDtoModel> idRequestDtoModelList) {
@@ -159,10 +149,8 @@ public class PrototypeApiRestController implements PrototypeApi {
 		}
 
 		List<PrototypeDtoModel> usecaseResponseList = prototypeDtoMapper.toPrototypeDtoModelList(
-			updatePrototypesUseCase.updatePrototypes(
-				prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)
-			)
-		);
+				updatePrototypesUseCase.updatePrototypes(
+						prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)));
 
 		return ResponseEntity.ok(usecaseResponseList);
 	}

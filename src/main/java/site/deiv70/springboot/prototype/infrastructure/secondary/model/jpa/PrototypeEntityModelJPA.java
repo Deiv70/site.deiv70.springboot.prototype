@@ -28,15 +28,15 @@ import java.util.UUID;
 @Table(name = "prototype")
 public class PrototypeEntityModelJPA {
 
-    @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 
 	@Column(columnDefinition = "VARCHAR(30) NOT NULL")
-    private String name;
+	private String name;
 
 	@Column(columnDefinition = "VARCHAR(100) NOT NULL")
-    private String description;
+	private String description;
 
 	@OneToMany(mappedBy = "prototype")
 	private List<SubPrototypeEntityModelJPA> subPrototypeEntityModelJPAList;

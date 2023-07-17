@@ -405,6 +405,7 @@
 				<sonar.coverage.jacoco.xmlReportPaths>
 					${project.reporting.outputDirectory}/jacoco/jacoco.xml
 				</sonar.coverage.jacoco.xmlReportPaths>
+				<!-- https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/test-coverage/java-test-coverage/#single-module-maven-project -->
 			</properties>
 			<build>
 				<plugins>
@@ -441,6 +442,7 @@
 							</execution>
 							<execution>
 								<id>report</id>
+								<!-- https://www.eclemma.org/jacoco/trunk/doc/report-mojo.html -->
 								<goals>
 									<goal>report</goal>
 								</goals>

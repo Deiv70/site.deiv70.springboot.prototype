@@ -38,7 +38,6 @@ logging:
   level:
     root: info
     sql: debug
-    org.hibernate: debug
     org.hibernate.SQL: debug
     org.hibernate.stat: debug
 #    web: info
