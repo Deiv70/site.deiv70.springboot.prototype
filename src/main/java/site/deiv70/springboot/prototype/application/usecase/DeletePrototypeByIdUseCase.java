@@ -12,8 +12,13 @@ public class DeletePrototypeByIdUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	public void deletePrototypeById(UUID id) {
+	public void deletePrototypeById(final UUID id) {
 		prototypeRepositoryPort.deletePrototypeById(id);
+	}
+
+	private void validate(final UUID id) {
+		prototypeRepositoryPort.getPrototypeById(id)
+				.orElseThrow(IllegalAccessError::new);
 	}
 
 }

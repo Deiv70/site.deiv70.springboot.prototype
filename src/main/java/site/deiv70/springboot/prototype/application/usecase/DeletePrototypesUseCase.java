@@ -13,7 +13,7 @@ public class DeletePrototypesUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	public void deletePrototypesById(List<IdRequestDtoModel> idRequestDtoModelList) {
+	public void deletePrototypesById(final List<IdRequestDtoModel> idRequestDtoModelList) {
 		idRequestDtoModelList.forEach(idRequestDtoModel -> {
 			prototypeRepositoryPort.deletePrototypeById(idRequestDtoModel.getId());
 		});

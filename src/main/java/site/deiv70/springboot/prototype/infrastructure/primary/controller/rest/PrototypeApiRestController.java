@@ -49,10 +49,9 @@ public class PrototypeApiRestController implements PrototypeApi {
 		}
 
 		Optional<PrototypeDtoModel> usecaseResponseOptional = getPrototypeByIdUseCase.getPrototypeById(prototypeId)
-				.map(prototypeDtoMapper::toPrototypeDtoModel);
+																.map(prototypeDtoMapper::toPrototypeDtoModel);
 
-		// Return a responseEntity 200 with usecaseResponseOptional if it's present, or
-		// else return a 404
+		// Return a responseEntity 200 with usecaseResponseOptional if it's present, or else return a 404
 		return usecaseResponseOptional
 				.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
@@ -60,19 +59,20 @@ public class PrototypeApiRestController implements PrototypeApi {
 
 	@Override
 	public ResponseEntity<PrototypeDtoModel> updatePrototypeById(
-			UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel) {
+			UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel
+	) {
 		if (prototypeId == null || updatedPrototypeDtoModel == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
 		Optional<PrototypeDtoModel> usecaseResponseOptional = updatePrototypeByIdUseCase.updatePrototypeById(
 				prototypeId,
-				prototypeDtoMapper.updatedToPrototypeModel(updatedPrototypeDtoModel))
-				.map(prototypeDtoMapper::toPrototypeDtoModel);
+				prototypeDtoMapper.updatedToPrototypeModel(updatedPrototypeDtoModel)
+			).map(prototypeDtoMapper::toPrototypeDtoModel);
 
 		return usecaseResponseOptional
 				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@Override
@@ -89,16 +89,20 @@ public class PrototypeApiRestController implements PrototypeApi {
 	@Override
 	public ResponseEntity<PrototypesPaginatedResponseDtoModel> getPrototypes(
 			String name,
-			@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
-		PrototypesPaginatedResponseDtoModel prototypesPaginatedResponseDtoModel = new PrototypesPaginatedResponseDtoModel();
+			@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+	) {
+		PrototypesPaginatedResponseDtoModel prototypesPaginatedResponseDtoModel =
+			new PrototypesPaginatedResponseDtoModel();
 		List<PrototypeDtoModel> prototypeDtoModelList = null;
 
 		if (name == null || name.isEmpty()) {
-			prototypeDtoModelList = getPrototypesUseCase.getAllPrototypes(pageable).map(
-					prototypeDtoMapper::toPrototypeDtoModel).getContent();
+			prototypeDtoModelList = getPrototypesUseCase.getAllPrototypes(pageable)
+				.map(prototypeDtoMapper::toPrototypeDtoModel)
+				.getContent();
 		} else {
-			prototypeDtoModelList = getPrototypesUseCase.getPrototypesByName(name, pageable).map(
-					prototypeDtoMapper::toPrototypeDtoModel).getContent();
+			prototypeDtoModelList = getPrototypesUseCase.getPrototypesByName(name, pageable)
+				.map(prototypeDtoMapper::toPrototypeDtoModel)
+				.getContent();
 		}
 
 		prototypesPaginatedResponseDtoModel.setContent(prototypeDtoModelList);
@@ -124,8 +128,7 @@ public class PrototypeApiRestController implements PrototypeApi {
 				createPrototypesUseCase.createPrototypes(
 						prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)));
 
-		// Return a responseEntity 200 with responseIterable if it's not empty, or else
-		// return a 400
+		// Return a responseEntity 200 with responseIterable if it's not empty, or else return a 400
 		return usecaseResponseList.iterator().hasNext()
 				? ResponseEntity.ok(usecaseResponseList)
 				: ResponseEntity.badRequest().build();

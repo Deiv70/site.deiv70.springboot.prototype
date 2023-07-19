@@ -1,19 +1,13 @@
 package site.deiv70.springboot.prototype.infrastructure.secondary.model.jpa;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SourceType;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,6 +17,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 // TODO: Make Table name configurable
 @Table(name = "prototype")
@@ -41,11 +36,13 @@ public class PrototypeEntityModelJPA {
 	@OneToMany(mappedBy = "prototype")
 	private List<SubPrototypeEntityModelJPA> subPrototypeEntityModelJPAList;
 
-	@CreationTimestamp(source = SourceType.DB)
+	// @CreationTimestamp(source = SourceType.DB)
+	@CreatedDate
 	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL")
 	private Instant createdAt;
 
-	@UpdateTimestamp(source = SourceType.DB)
+	// @UpdateTimestamp(source = SourceType.DB)
+	@LastModifiedDate
 	@Column(name = "last_modified_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP")
 	private Instant lastModifiedAt;
 

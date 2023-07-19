@@ -11,13 +11,14 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PrototypeDtoMapper {
 
-    PrototypeDtoModel toPrototypeDtoModel(PrototypeModel prototypeModel);
+	PrototypeDtoModel toPrototypeDtoModel(PrototypeModel prototypeModel);
 	PrototypeModel toPrototypeModel(PrototypeDtoModel prototypeDtoModel);
 
-    List<PrototypeDtoModel> toPrototypeDtoModelList(List<PrototypeModel> prototypeModelList);
+	List<PrototypeDtoModel> toPrototypeDtoModelList(List<PrototypeModel> prototypeModelList);
 	List<PrototypeModel> toPrototypeModelList(List<PrototypeDtoModel> prototypeDtoModelList);
 
 	PrototypeModel updatedToPrototypeModel(PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel);
+	PrototypeUpdateRequestDtoModel toPrototypeUpdateRequestDtoModel(PrototypeModel prototypeModel);
 	List<PrototypeModel> updatedListToPrototypeModelList(List<PrototypeUpdateRequestDtoModel> updatedPrototypeDtoModelList);
 
 }

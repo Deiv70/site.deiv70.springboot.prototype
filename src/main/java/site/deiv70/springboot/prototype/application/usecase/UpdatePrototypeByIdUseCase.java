@@ -17,7 +17,7 @@ public class UpdatePrototypeByIdUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	//TODO: Check why this is not returning the created-at field
+	// TODO: Check why this is not returning the created-at field
 	public Optional<PrototypeModel> updatePrototypeById(final UUID prototypeId, final PrototypeModel prototypeModel) {
 		prototypeModel.setId(prototypeId);
 		validate(prototypeModel);
