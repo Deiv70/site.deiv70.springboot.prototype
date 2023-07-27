@@ -27,7 +27,7 @@
 
 	<reporting>
 		<!-- Change the Default Reporting Directory: "${project.build.directory}/site" -->
-		<outputDirectory>${project.basedir}/reports</outputDirectory>
+		<!-- <outputDirectory>${project.basedir}/reports</outputDirectory> -->
 	</reporting>
 
 	<properties>

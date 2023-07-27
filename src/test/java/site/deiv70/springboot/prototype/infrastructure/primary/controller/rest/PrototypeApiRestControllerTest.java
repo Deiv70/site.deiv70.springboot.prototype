@@ -21,10 +21,13 @@ import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypeByIdU
 import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypesUseCase;
 import site.deiv70.springboot.prototype.common.TestAbstract;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
-import site.deiv70.springboot.prototype.infrastructure.primary.dto.IdRequestDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorResponseDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.IdDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeUpdateRequestDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesPaginatedResponseDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
+import site.deiv70.springboot.prototype.infrastructure.primary.exception.RestExceptionHandler;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapper;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapperImpl;
 
@@ -38,8 +41,9 @@ import java.util.stream.Collectors;
 @ExtendWith(MockitoExtension.class)
 class PrototypeApiRestControllerTest extends TestAbstract {
 
-	private PrototypeApiRestController prototypeApiRestController;
+	private final RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
 	private final PrototypeDtoMapper prototypeDtoMapper = new PrototypeDtoMapperImpl();
+	private PrototypeApiRestController prototypeApiRestController;
 
 	@Mock
 	private GetPrototypeByIdUseCase getPrototypeByIdUseCase;
@@ -78,7 +82,7 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		prototypeModel.setId(uuid);
 
 		// When
-		Mockito.when(getPrototypeByIdUseCase.getPrototypeById(uuid))
+		Mockito.when(getPrototypeByIdUseCase.execute(uuid))
 				.thenReturn(Optional.of(prototypeModel));
 
 		// Then
@@ -93,7 +97,7 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		UUID uuid = UUID.randomUUID();
 
 		// When
-		Mockito.when(getPrototypeByIdUseCase.getPrototypeById(uuid))
+		Mockito.when(getPrototypeByIdUseCase.execute(uuid))
 				.thenReturn(Optional.empty());
 
 		// Then
@@ -107,31 +111,44 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		UUID uuid = null;
 
 		// When
+		ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class, () -> {
+			prototypeApiRestController.getPrototypeById(uuid);
+		});
 
 		// Then
-		ResponseEntity<PrototypeDtoModel> responseEntity = prototypeApiRestController.getPrototypeById(uuid);
+		Assertions.assertEquals("InvalidParameterException", exception.getType());
+		Assertions.assertEquals("Prototype id can't be null", exception.getMessage());
+		ResponseEntity<ApiErrorResponseDtoModel> responseEntity = restExceptionHandler.handleApiRequestException(exception);
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+		// Then
+		//ResponseEntity<PrototypeDtoModel> responseEntity = prototypeApiRestController.getPrototypeById(uuid);
+		//Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 
 	@Test
-	void updatePrototypeById_return_OK() {	// TODO: Check why this test fails
+	void updatePrototypeById_return_OK() {
 		// Given
-		PrototypeModel prototypeModel = easyRandom.nextObject(PrototypeModel.class);
-		UUID uuid = UUID.randomUUID();
-		prototypeModel.setId(uuid);
-
 		PrototypeUpdateRequestDtoModel prototypeUpdateRequestDtoModel =
-				prototypeDtoMapper.toPrototypeUpdateRequestDtoModel(prototypeModel);
+			easyRandom.nextObject(PrototypeUpdateRequestDtoModel.class);
+		prototypeUpdateRequestDtoModel.setSubPrototypes(null);
+		UUID uuid = UUID.randomUUID();
+
+		PrototypeModel prototypeModel = prototypeDtoMapper.updatedToPrototypeModel(prototypeUpdateRequestDtoModel);
+		prototypeModel.setId(null);
+
+		PrototypeModel returnedPrototypeModel = new PrototypeModel(uuid, prototypeModel.getName(),
+				prototypeModel.getDescription(), null, null, null);
 
 		// When
-		Mockito.when(updatePrototypeByIdUseCase.updatePrototypeById(uuid, prototypeModel))
-				.thenReturn(Optional.of(prototypeModel));
+		Mockito.when(updatePrototypeByIdUseCase.execute(uuid, prototypeModel))
+				.thenReturn(Optional.of(returnedPrototypeModel));
 
 		// Then
 		ResponseEntity<PrototypeDtoModel> responseEntity =
 				prototypeApiRestController.updatePrototypeById(uuid, prototypeUpdateRequestDtoModel);
 		Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		//Assertions.assertEquals(prototypeModel.getName(), Objects.requireNonNull(responseEntity.getBody()).getName());
+		Assertions.assertEquals(prototypeModel.getName(), Objects.requireNonNull(responseEntity.getBody()).getName());
 	}
 
 	@Test
@@ -142,7 +159,7 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 				easyRandom.nextObject(PrototypeUpdateRequestDtoModel.class);
 
 		// When
-		Mockito.when(updatePrototypeByIdUseCase.updatePrototypeById(uuid,
+		Mockito.when(updatePrototypeByIdUseCase.execute(uuid,
 				prototypeDtoMapper.updatedToPrototypeModel(prototypeUpdateRequestDtoModel)))
 				.thenReturn(Optional.empty());
 
@@ -155,14 +172,21 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 	@Test
 	void updatePrototypeById_return_BadRequest() {
 		// Given
-		UUID uuid = null;
-		PrototypeUpdateRequestDtoModel prototypeUpdateRequestDtoModel = null;
+		UUID uuid = UUID.randomUUID();
+		PrototypeUpdateRequestDtoModel prototypeUpdateRequestDtoModel =
+			easyRandom.nextObject(PrototypeUpdateRequestDtoModel.class);
+
+		UUID nullUuid = null;
+		PrototypeUpdateRequestDtoModel nullPrototypeUpdateRequestDtoModel = null;
 
 		// When
 
 		// Then
 		ResponseEntity<PrototypeDtoModel> responseEntity =
-				prototypeApiRestController.updatePrototypeById(uuid, prototypeUpdateRequestDtoModel);
+				prototypeApiRestController.updatePrototypeById(nullUuid, prototypeUpdateRequestDtoModel);
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		// Then
+		responseEntity = prototypeApiRestController.updatePrototypeById(uuid, nullPrototypeUpdateRequestDtoModel);
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 
@@ -198,6 +222,7 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		Pageable pageable = PageRequest.of(0, 10);
 		PageImpl<PrototypeModel> prototypeModelPage =
 				new PageImpl<>(prototypeModelList, pageable, prototypeModelList.size());
+		String emptyName = "";
 
 		// When
 		Mockito.when(getPrototypesUseCase.getAllPrototypes(pageable))
@@ -206,6 +231,11 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		// Then
 		ResponseEntity<PrototypesPaginatedResponseDtoModel> responseEntity =
 				prototypeApiRestController.getPrototypes(null, pageable);
+		Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		Assertions.assertEquals(prototypeModelList.size(),
+				Objects.requireNonNull(responseEntity.getBody()).getContent().size());
+		// Then
+		responseEntity = prototypeApiRestController.getPrototypes(emptyName, pageable);
 		Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		Assertions.assertEquals(prototypeModelList.size(),
 				Objects.requireNonNull(responseEntity.getBody()).getContent().size());
@@ -257,6 +287,9 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		List<PrototypeDtoModel> prototypeDtoModelList = new ArrayList<>();
 
 		// When
+		//Mockito.when(createPrototypesUseCase.createPrototypes(
+		//	prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList))
+		//).thenReturn(null);
 
 		// Then
 		ResponseEntity<List<PrototypeDtoModel>> responseEntity =
@@ -267,25 +300,25 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 	@Test
 	void deletePrototypes_return_OK() {
 		// Given
-		List<IdRequestDtoModel> idRequestDtoModelList =
-				easyRandom.objects(IdRequestDtoModel.class, 5).collect(Collectors.toList());
+		List<IdDtoModel> idDtoModelList =
+				easyRandom.objects(IdDtoModel.class, 5).collect(Collectors.toList());
 
 		// When
 
 		// Then
-		ResponseEntity<Void> responseEntity = prototypeApiRestController.deletePrototypes(idRequestDtoModelList);
+		ResponseEntity<Void> responseEntity = prototypeApiRestController.deletePrototypes(idDtoModelList);
 		Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	}
 
 	@Test
 	void deletePrototypes_return_BadRequest() {
 		// Given
-		List<IdRequestDtoModel> idRequestDtoModelList = new ArrayList<>();
+		List<IdDtoModel> idDtoModelList = new ArrayList<>();
 
 		// When
 
 		// Then
-		ResponseEntity<Void> responseEntity = prototypeApiRestController.deletePrototypes(idRequestDtoModelList);
+		ResponseEntity<Void> responseEntity = prototypeApiRestController.deletePrototypes(idDtoModelList);
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 

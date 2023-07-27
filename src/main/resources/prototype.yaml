@@ -151,7 +151,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/IdRequestDtoModel'
+                $ref: '#/components/schemas/IdDtoModel'
       responses:
         '200':
           description: Successful operation
@@ -374,7 +374,7 @@ components:
       xml:
         name: 'CriteriaDtoModel'
 
-    IdRequestDtoModel:
+    IdDtoModel:
       type: object
       properties:
         id:
@@ -382,7 +382,7 @@ components:
           format: uuid
           example: 123e4567-e89b-12d3-a456-426655440000
       xml:
-        name: 'IdRequestDtoModel'
+        name: 'IdDtoModel'
 
     PrototypesPaginatedResponseDtoModel:
 #      x-spring-paginated: true
@@ -406,6 +406,10 @@ components:
         description:
           type: string
           example: This is the description of the prototype
+        subPrototypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdDtoModel'
       xml:
         name: 'PrototypeUpdateRequestDtoModel'
 
@@ -493,8 +497,10 @@ components:
         type: string
         example: 'name'
 
-#  securitySchemes:
-
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
 #    petstore_auth:
 #      type: oauth2
 #      flows:

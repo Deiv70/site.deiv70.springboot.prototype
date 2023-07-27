@@ -16,10 +16,11 @@ import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypeByIdU
 import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypesUseCase;
 import site.deiv70.springboot.prototype.infrastructure.primary.api.PrototypeApi;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.CriteriaDtoModel;
-import site.deiv70.springboot.prototype.infrastructure.primary.dto.IdRequestDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.dto.IdDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeUpdateRequestDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesPaginatedResponseDtoModel;
+import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapper;
 
 import java.util.List;
@@ -44,14 +45,15 @@ public class PrototypeApiRestController implements PrototypeApi {
 
 	@Override
 	public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
-		if (prototypeId == null) {
-			return ResponseEntity.badRequest().build();
+		// 1. Always check parameters first
+		if (prototypeId == null) {	// It can't be empty because it's a UUID type
+			throw new ApiRequestException("InvalidParameterException", "Prototype id can't be null");
+			// return ResponseEntity.badRequest().build();
 		}
-
-		Optional<PrototypeDtoModel> usecaseResponseOptional = getPrototypeByIdUseCase.getPrototypeById(prototypeId)
+		// 2. Call the usecase
+		Optional<PrototypeDtoModel> usecaseResponseOptional = getPrototypeByIdUseCase.execute(prototypeId)
 																.map(prototypeDtoMapper::toPrototypeDtoModel);
-
-		// Return a responseEntity 200 with usecaseResponseOptional if it's present, or else return a 404
+		// 3. Check the usecaseResponse and return the corresponding
 		return usecaseResponseOptional
 				.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
@@ -61,15 +63,18 @@ public class PrototypeApiRestController implements PrototypeApi {
 	public ResponseEntity<PrototypeDtoModel> updatePrototypeById(
 			UUID prototypeId, PrototypeUpdateRequestDtoModel updatedPrototypeDtoModel
 	) {
+		// 1. Always check parameters first
 		if (prototypeId == null || updatedPrototypeDtoModel == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<PrototypeDtoModel> usecaseResponseOptional = updatePrototypeByIdUseCase.updatePrototypeById(
+		// 2. Call the usecase
+		Optional<PrototypeDtoModel> usecaseResponseOptional = updatePrototypeByIdUseCase.execute(
 				prototypeId,
 				prototypeDtoMapper.updatedToPrototypeModel(updatedPrototypeDtoModel)
 			).map(prototypeDtoMapper::toPrototypeDtoModel);
 
+		// 3. Check the usecaseResponse and return the corresponding
 		return usecaseResponseOptional
 				.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
@@ -135,12 +140,12 @@ public class PrototypeApiRestController implements PrototypeApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> deletePrototypes(List<IdRequestDtoModel> idRequestDtoModelList) {
-		if (idRequestDtoModelList.isEmpty()) {
+	public ResponseEntity<Void> deletePrototypes(List<IdDtoModel> idDtoModelList) {
+		if (idDtoModelList.isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		deletePrototypesUseCase.deletePrototypesById(idRequestDtoModelList);
+		deletePrototypesUseCase.deletePrototypesById(idDtoModelList);
 
 		return ResponseEntity.ok().build();
 	}

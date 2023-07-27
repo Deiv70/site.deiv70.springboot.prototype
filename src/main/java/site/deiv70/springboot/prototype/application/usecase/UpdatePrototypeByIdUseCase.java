@@ -17,11 +17,15 @@ public class UpdatePrototypeByIdUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	// TODO: Check why this is not returning the created-at field
-	public Optional<PrototypeModel> updatePrototypeById(final UUID prototypeId, final PrototypeModel prototypeModel) {
+	public Optional<PrototypeModel> execute(final UUID prototypeId, final PrototypeModel prototypeModel) {
+		// Override the id with the one from the path
 		prototypeModel.setId(prototypeId);
+		// Validate the prototype
 		validate(prototypeModel);
-		return prototypeRepositoryPort.updatePrototypeById(prototypeModel);
+		// Update the prototype
+		prototypeRepositoryPort.updatePrototypeById(prototypeModel);
+		// To fix the missing created-at field, return the prototype from the repository
+		return prototypeRepositoryPort.getPrototypeById(prototypeId);
 	}
 
 	private void validate(PrototypeModel prototypeModel) {

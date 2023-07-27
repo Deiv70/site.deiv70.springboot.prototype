@@ -14,7 +14,7 @@ public class GetPrototypeByIdUseCase {
 
     private PrototypeRepositoryPort prototypeRepositoryPort;
 
-    public Optional<PrototypeModel> getPrototypeById(final UUID id) {
+    public Optional<PrototypeModel> execute(final UUID id) {
         return prototypeRepositoryPort.getPrototypeById(id);
     }
 

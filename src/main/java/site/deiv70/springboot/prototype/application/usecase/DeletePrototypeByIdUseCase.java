@@ -13,6 +13,7 @@ public class DeletePrototypeByIdUseCase {
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
 	public void deletePrototypeById(final UUID id) {
+		validate(id);
 		prototypeRepositoryPort.deletePrototypeById(id);
 	}
 
