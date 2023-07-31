@@ -1,0 +1,20 @@
+spring:
+#  docker:
+#    compose:
+#      enabled: true
+#      file: "src/test/resources/compose.yaml"
+#      lifecycle-management: start_and_stop
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: ${SPRING_APP_TEST_DATABASE_DDL-AUTO:validate}
+
+## Custom Values for Variables
+vars:
+  db:
+    schema: testdb
+#    table-name: ${SPRING_APP_TEST_DATABASE_TABLE:prototype}
+
+## Custom ConditionalOnProperty values
+cop:
+  database-service: ${SPRING_APP_DATABASE_IMPLEMENTATION:jpa}

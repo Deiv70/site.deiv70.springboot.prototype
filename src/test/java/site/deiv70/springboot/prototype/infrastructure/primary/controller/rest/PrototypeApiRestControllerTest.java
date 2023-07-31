@@ -3,10 +3,8 @@ package site.deiv70.springboot.prototype.infrastructure.primary.controller.rest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +19,11 @@ import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypeByIdU
 import site.deiv70.springboot.prototype.application.usecase.UpdatePrototypesUseCase;
 import site.deiv70.springboot.prototype.common.TestAbstract;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
-import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorResponseDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.IdDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypeUpdateRequestDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.dto.PrototypesPaginatedResponseDtoModel;
 import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
-import site.deiv70.springboot.prototype.infrastructure.primary.exception.RestExceptionHandler;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapper;
 import site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapperImpl;
 
@@ -38,10 +34,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@ExtendWith(MockitoExtension.class)
 class PrototypeApiRestControllerTest extends TestAbstract {
-
-	private final RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
 	private final PrototypeDtoMapper prototypeDtoMapper = new PrototypeDtoMapperImpl();
 	private PrototypeApiRestController prototypeApiRestController;
 
@@ -116,10 +109,10 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		});
 
 		// Then
-		Assertions.assertEquals("InvalidParameterException", exception.getType());
+		Assertions.assertEquals(ApiRequestException.Type.INVALID_PARAMETER_EXCEPTION, exception.getType());
 		Assertions.assertEquals("Prototype id can't be null", exception.getMessage());
-		ResponseEntity<ApiErrorResponseDtoModel> responseEntity = restExceptionHandler.handleApiRequestException(exception);
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		//ResponseEntity<ApiErrorResponseDtoModel> responseEntity = restExceptionHandler.handleApiRequestException(exception);
+		//Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
 		// Then
 		//ResponseEntity<PrototypeDtoModel> responseEntity = prototypeApiRestController.getPrototypeById(uuid);

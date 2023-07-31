@@ -4,23 +4,40 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import site.deiv70.springboot.prototype.common.IntegrationTestAbstractJPAContainer;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import site.deiv70.springboot.prototype.common.TestAbstract;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
+import site.deiv70.springboot.prototype.infrastructure.secondary.mapper.jpa.PrototypeEntityMapperJPA;
+import site.deiv70.springboot.prototype.infrastructure.secondary.mapper.jpa.PrototypeEntityMapperJPAImpl;
+import site.deiv70.springboot.prototype.infrastructure.secondary.persistence.jpa.PrototypeEntityJPARepository;
 
 import java.util.Collections;
 import java.util.List;
 
-@SpringBootTest(properties = {"cop.database-service=jpa"})
-class PrototypeRepositoryAdapterJPAIntegrationTest extends IntegrationTestAbstractJPAContainer {
-
-	@Autowired
+@DataJpaTest
+class PrototypeRepositoryAdapterJPAIntegrationTest extends TestAbstract {
+	private final PrototypeEntityMapperJPA prototypeEntityMapperJPA = new PrototypeEntityMapperJPAImpl();
 	private PrototypeRepositoryAdapterJPA prototypeRepositoryAdapterJPA;
 
-	@BeforeEach
-	public void setUp() {
+	@Autowired
+	private PrototypeEntityJPARepository prototypeEntityJPARepository;
 
+	@BeforeEach
+	void setUp() {
+		prototypeRepositoryAdapterJPA = new PrototypeRepositoryAdapterJPA(prototypeEntityJPARepository, prototypeEntityMapperJPA);
 	}
+
+//	@Autowired private DataSource dataSource;
+//	@Autowired private JdbcTemplate jdbcTemplate;
+//	@Autowired private EntityManager entityManager;
+
+//	@Test
+//	void injectedComponentsAreNotNull(){
+//		assertNotNull(dataSource);
+//		assertNotNull(jdbcTemplate);
+//		assertNotNull(entityManager);
+//		assertNotNull(prototypeRepositoryAdapterJPA);
+//	}
 
 //	@Test
 //	void test_restartable_db() {

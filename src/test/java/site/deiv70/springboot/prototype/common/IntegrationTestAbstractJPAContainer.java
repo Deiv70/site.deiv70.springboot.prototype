@@ -1,13 +1,17 @@
 package site.deiv70.springboot.prototype.common;
 
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-
-@SpringBootTest
+//@DataJpaTest
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(initializers = IntegrationTestAbstractJPAContainer.DataSourceInitializer.class)
 @Testcontainers
 public abstract class IntegrationTestAbstractJPAContainer extends TestAbstract {
 
@@ -20,6 +24,20 @@ public abstract class IntegrationTestAbstractJPAContainer extends TestAbstract {
 		.withPassword("testpwd")
 		.withDatabaseName("testdb")
 		.withInitScript("schema.sql");
+
+	public static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+		@Override
+		public void initialize(ConfigurableApplicationContext applicationContext) {
+			TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
+				applicationContext,
+				"spring.test.database.replace=none",
+				"spring.datasource.url=" + jpaContainer.getJdbcUrl(),
+				"spring.datasource.username=" + jpaContainer.getUsername(),
+				"spring.datasource.password=" + jpaContainer.getPassword()
+			);
+		}
+	}
 
 /*
 	@DynamicPropertySource // Old way to tell Spring Boot connection details for later usage

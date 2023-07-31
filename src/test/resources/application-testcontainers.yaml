@@ -1,0 +1,13 @@
+spring:
+  test:
+    database:
+      replace: none
+  datasource:
+    url: jdbc:tc:${SPRING_APP_TEST_DATABASE:mariadb}:latest:///testdb?TC_INITSCRIPT=file:src/main/resources/schema.sql
+    username: ${SPRING_APP_TEST_DATABASE_USERNAME:testuser}
+    password: ${SPRING_APP_TEST_DATABASE_PASSWORD:testpwd}
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${SPRING_APP_TEST_DATABASE_DIALECT:org.hibernate.dialect.MariaDBDialect}

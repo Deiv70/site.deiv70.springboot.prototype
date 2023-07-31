@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.1</version>
+		<version>3.1.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -65,7 +65,11 @@
 		<springdoc-openapi.version>2.1.0</springdoc-openapi.version>
 		<openapi-generator.version>6.6.0</openapi-generator.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<swagger-parser.version>2.1.15</swagger-parser.version>
+		<swagger-parser.version>2.1.16</swagger-parser.version>
+
+        <!-- Vulnerable Dependencies Updates -->
+            <!-- For spring-boot-starter (3.1.2) -->
+        <snakeyaml.version>2.0</snakeyaml.version>
 
 		<!-- Switch between WebFlux (Reactive) and WebMVC (Blocking) -->
 		<web_or_webflux>web</web_or_webflux>
@@ -382,6 +386,28 @@
 	</build>
 
 	<profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>pre</id>
+            <properties>
+                <spring.profiles.active>pre</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <spring.profiles.active>pro</spring.profiles.active>
+            </properties>
+        </profile>
+
 		<profile>
 			<id>coverage</id>
 			<properties>

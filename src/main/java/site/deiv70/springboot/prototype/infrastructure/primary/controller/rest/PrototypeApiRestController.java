@@ -1,6 +1,6 @@
 package site.deiv70.springboot.prototype.infrastructure.primary.controller.rest;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -27,27 +27,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("api/")
+@RequiredArgsConstructor
 public class PrototypeApiRestController implements PrototypeApi {
 
-	private PrototypeDtoMapper prototypeDtoMapper;
+	private final PrototypeDtoMapper prototypeDtoMapper;
 
-	private GetPrototypeByIdUseCase getPrototypeByIdUseCase;
-	private UpdatePrototypeByIdUseCase updatePrototypeByIdUseCase;
-	private DeletePrototypeByIdUseCase deletePrototypeByIdUseCase;
+	private final GetPrototypeByIdUseCase getPrototypeByIdUseCase;
+	private final UpdatePrototypeByIdUseCase updatePrototypeByIdUseCase;
+	private final DeletePrototypeByIdUseCase deletePrototypeByIdUseCase;
 
-	private GetPrototypesUseCase getPrototypesUseCase;
-	private CreatePrototypesUseCase createPrototypesUseCase;
-	private UpdatePrototypesUseCase updatePrototypesUseCase;
-	private DeletePrototypesUseCase deletePrototypesUseCase;
+	private final GetPrototypesUseCase getPrototypesUseCase;
+	private final CreatePrototypesUseCase createPrototypesUseCase;
+	private final UpdatePrototypesUseCase updatePrototypesUseCase;
+	private final DeletePrototypesUseCase deletePrototypesUseCase;
 
 	@Override
 	public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
 		// 1. Always check parameters first
 		if (prototypeId == null) {	// It can't be empty because it's a UUID type
-			throw new ApiRequestException("InvalidParameterException", "Prototype id can't be null");
+			throw new ApiRequestException(ApiRequestException.Type.INVALID_PARAMETER_EXCEPTION,
+				"Prototype id can't be null");
 			// return ResponseEntity.badRequest().build();
 		}
 		// 2. Call the usecase

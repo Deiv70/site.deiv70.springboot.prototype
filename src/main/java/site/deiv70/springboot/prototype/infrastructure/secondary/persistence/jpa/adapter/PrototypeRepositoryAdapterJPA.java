@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-@AllArgsConstructor
 @Repository
 @ConditionalOnProperty(prefix = "cop", name = "database-service", havingValue = "jpa", matchIfMissing = true)
+@AllArgsConstructor
 public class PrototypeRepositoryAdapterJPA implements PrototypeRepositoryPort {
 
 	private PrototypeEntityJPARepository prototypeEntityJPARepository;

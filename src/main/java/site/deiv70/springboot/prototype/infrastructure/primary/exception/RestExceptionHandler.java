@@ -8,21 +8,11 @@ import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorRespo
 
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
 	@ExceptionHandler(ApiRequestException.class)
 	public ResponseEntity<ApiErrorResponseDtoModel> handleApiRequestException(ApiRequestException ex) {
-		ApiErrorResponseDtoModel apiErrorResponseDtoModel = new ApiErrorResponseDtoModel();
-		apiErrorResponseDtoModel.setType(ex.getType());
-
-		switch (ex.getType()) {
-			case "InvalidParameterException" -> apiErrorResponseDtoModel.setCode(400);
-			case "InsufficientPermissionsException" -> apiErrorResponseDtoModel.setCode(401);
-			case "EntityNotFoundException" -> apiErrorResponseDtoModel.setCode(404);
-			case "ServerException" -> apiErrorResponseDtoModel.setCode(500);
-			case "UnavailableServiceException" -> apiErrorResponseDtoModel.setCode(503);
-			default -> apiErrorResponseDtoModel.setCode(500);
-		}
-
-		apiErrorResponseDtoModel.setMessage(ex.getMessage());
+		ApiErrorResponseDtoModel apiErrorResponseDtoModel = ex.getHttpResponse();
 		return ResponseEntity.status(apiErrorResponseDtoModel.getCode()).body(apiErrorResponseDtoModel);
 	}
+
 }
