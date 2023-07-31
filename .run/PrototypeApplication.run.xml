@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PrototypeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="prototype" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="site.deiv70.springboot.prototype.PrototypeApplication" />
+    <extension name="coverage" sample_coverage="false" track_test_folders="true">
+      <pattern>
+        <option name="PATTERN" value="site.deiv70.springboot.prototype.infrastructure.primary.mapper.PrototypeDtoMapper" />
+        <option name="ENABLED" value="false" />
+        <option name="INCLUDE" value="false" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="site.deiv70.springboot.prototype.infrastructure.secondary.mapper.jpa.PrototypeEntityMapperJPA" />
+        <option name="ENABLED" value="false" />
+        <option name="INCLUDE" value="false" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
