@@ -1,6 +1,6 @@
 package site.deiv70.springboot.prototype.infrastructure.secondary.persistence.jpa.adapter;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +18,11 @@ import java.util.UUID;
 
 @Repository
 @ConditionalOnProperty(prefix = "cop", name = "database-service", havingValue = "jpa", matchIfMissing = true)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PrototypeRepositoryAdapterJPA implements PrototypeRepositoryPort {
 
-	private PrototypeEntityJPARepository prototypeEntityJPARepository;
-	private PrototypeEntityMapperJPA prototypeEntityMapperJPA;
+	private final PrototypeEntityJPARepository prototypeEntityJPARepository;
+	private final PrototypeEntityMapperJPA prototypeEntityMapperJPA;
 
 	@Override
 	public Optional<PrototypeModel> getPrototypeById(UUID id) {
