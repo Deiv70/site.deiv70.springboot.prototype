@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:${SPRING_JDBC_DATABASE_CLIENT:mariadb}://${SPRING_JDBC_DATABASE_HOST:localhost}:${SPRING_JDBC_DATABASE_PORT:3306}/${SPRING_JDBC_DATABASE_SCHEMA:prototype}
+    username: ${SPRING_JDBC_DATABASE_USERNAME:spring}
+    password: ${SPRING_JDBC_DATABASE_PASSWORD:spring.pwd}
+    driver-class-name: ${SPRING_JDBC_DATABASE_DRIVER:org.mariadb.jdbc.Driver}
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${SPRING_JDBC_DATABASE_DIALECT:org.hibernate.dialect.MariaDBDialect}

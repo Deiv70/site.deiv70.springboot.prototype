@@ -2,24 +2,24 @@ version: '3'
 
 services:
 
-  mariadb:
-    image: mariadb:latest
+  jdbc_db:
+    image: ${SPRING_JDBC_DATABASE_CLIENT}:${SPRING_JDBC_DATABASE_CLIENT_VERSION}
     restart: unless-stopped
-#    hostname: mariadb.prototype.springboot.local
+#    hostname: db.prototype.springboot.local
     environment:
-      MYSQL_DATABASE: ${SPRING_APP_DATABASE_SCHEMA}
-      MYSQL_USER: ${SPRING_APP_DATABASE_USERNAME}
-      MYSQL_PASSWORD: ${SPRING_APP_DATABASE_PASSWORD}
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: 'R007pwd'
+      MYSQL_DATABASE: ${SPRING_JDBC_DATABASE_SCHEMA}
+      MYSQL_USER: ${SPRING_JDBC_DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${SPRING_JDBC_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${SPRING_JDBC_DATABASE_ROOT_PASSWORD}
+    # Expose to the Host
     ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - ${SPRING_APP_DATABASE_PORT}:3306
+      # < Port exposed locally > : < Port running inside container >
+      - ${SPRING_JDBC_DATABASE_PORT}:3306
+    # Expose to the Docker Network
 #    expose:
-      # Opens ports 3306 on the container
 #      - '3306'
     volumes:
-      - prototype-mariadb-vol:/var/lib/mysql
+      - prototype-jdbc_db-vol:/var/lib/mysql
     networks:
       - prototype-net
 
@@ -43,4 +43,4 @@ networks:
   prototype-net:
 
 volumes:
-  prototype-mariadb-vol:
+  prototype-jdbc_db-vol:

@@ -5,9 +5,9 @@ spring:
 #      file: "src/test/resources/compose.yaml"
 #      lifecycle-management: start_and_stop
   jpa:
-    show-sql: true
+    show-sql: ${SPRING_TESTDEV_SHOW_SQL:false}
     hibernate:
-      ddl-auto: ${SPRING_APP_TEST_DATABASE_DDL-AUTO:validate}
+      ddl-auto: ${SPRING_TESTDEV_JPA_HIBERNATE_DDL_AUTO:validate}
 
 ## Custom Values for Variables
 vars:
@@ -17,4 +17,4 @@ vars:
 
 ## Custom ConditionalOnProperty values
 cop:
-  database-service: ${SPRING_APP_DATABASE_IMPLEMENTATION:jpa}
+  database-service: ${SPRING_TESTDEV_DATABASE_IMPLEMENTATION:jpa}

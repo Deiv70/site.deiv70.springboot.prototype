@@ -421,8 +421,10 @@
 			<id>coverage</id>
 			<properties>
 				<!-- SonarQube Config -->
+                <!-- <sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
+                <sonar.token>${env.SONAR_TOKEN}</sonar.token> -->
+                <sonar.projectKey>${project.artifactId}</sonar.projectKey>
 				<sonar.projectName>${project.artifactId}</sonar.projectName>
-				<sonar.projectKey>${project.artifactId}</sonar.projectKey>
 				<sonar.projectVersion>${project.version}</sonar.projectVersion>
 				<!-- <sonar.language>java</sonar.language> -->
 				<sonar.coverage.exclusions>

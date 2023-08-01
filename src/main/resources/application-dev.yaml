@@ -5,24 +5,14 @@ spring:
 #      enabled: true
 #      file: compose.yaml
 #      lifecycle-management: start_and_stop
-
-  datasource:
-    ## JDBC or R2DBC for Reactive
-    url: jdbc:${SPRING_APP_DATABASE:mariadb}://${SPRING_APP_DATABASE_HOST:localhost}:${SPRING_APP_DATABASE_PORT:3306}/${SPRING_APP_DATABASE_SCHEMA:prototype}
-    username: ${SPRING_APP_DATABASE_USERNAME:spring}
-    password: ${SPRING_APP_DATABASE_PASSWORD:spring.pwd}
-    driver-class-name: ${SPRING_APP_DATABASE_DRIVER:org.mariadb.jdbc.Driver}
   jpa:
-    show-sql: true
+    show-sql: ${SPRING_DEV_SHOW_SQL:true}
     hibernate:
-      ddl-auto: ${SPRING_APP_DATABASE_DDL-AUTO:update}
-    properties:
-      hibernate:
-        dialect: ${SPRING_APP_DATABASE_DIALECT:org.hibernate.dialect.MariaDBDialect}
+      ddl-auto: ${SPRING_DEV_JPA_HIBERNATE_DDL_AUTO:update}
 
   security:
     user:
-      password: ${SPRING_APP_SECURITY_PASSWORD:2f2489d8-0b33-4eea-a2e1-2bcc57c2826e}
+      password: ${SPRING_DEV_SECURITY_PASSWORD:2f2489d8-0b33-4eea-a2e1-2bcc57c2826e}
   ## Reactive
 #  webflux:
 #    base-path: /
@@ -43,7 +33,7 @@ logging:
 
 ## Custom ConditionalOnProperty values
 cop:
-  database-service: ${SPRING_APP_DATABASE_IMPLEMENTATION:jpa}
+  database-service: ${SPRING_DEV_DATABASE_IMPLEMENTATION:jpa}
 
 ## Custom Values for Variables
 #vars:
@@ -52,16 +42,16 @@ cop:
 
 springdoc:
 #  version: '@springdoc.version@'
-  show-actuator: true
+  show-actuator: ${SPRING_DEV_SPRINGDOC_SHOW_ACTUATOR:true}
   use-management-port: true
 #  packages-to-scan: site.deiv70.springboot.openapitools, site.deiv70.springboot.application, site.deiv70.springboot.model, vnd.spring-boot.actuator
   swagger-ui:
-    enabled: true
-    path: ${SPRING_APP_ENDPOINT_SWAGGER:/swagger-ui}
+    enabled: ${SPRING_DEV_SPRINGDOC_SWAGGER_ENABLED:true}
+    path: ${SPRING_DEV_SPRINGDOC_SWAGGER_PATH:/swagger-ui}
     csrf:
-      enabled: true
+      enabled: ${SPRING_DEV_SPRINGDOC_SWAGGER_CSRF_ENABLED:true}
   api-docs:
-    path: /api-docs
+    path: ${SPRING_DEV_SPRINGDOC_API_DOCS_PATH:/api-docs}
 #  group-configs:
 #    - group: pet
 #      paths-to-match: /pet/**
@@ -71,12 +61,12 @@ management:
     web:
       exposure:
         include: '*'
-      base-path: ${SPRING_APP_ENDPOINT_MANAGEMENT_PATH:/actuator}
+      base-path: ${SPRING_DEV_MANAGEMENT_PATH:/actuator}
 
   server:
-    port: ${SPRING_APP_MANAGEMENT_PORT:9090}
+    port: ${SPRING_DEV_MANAGEMENT_PORT:9090}
 
 server:
-  port: ${SPRING_APP_PORT:8080}
-#  servlet:
-#    context-path: ${SPRING_APP_ENDPOINT_CONTEXT_PATH:/}
+  port: ${SPRING_DEV_PORT:8080}
+  servlet:
+    context-path: ${SPRING_DEV_CONTEXT_PATH:/}
