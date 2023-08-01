@@ -1,10 +1,10 @@
 package site.deiv70.springboot.prototype.application.usecase;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
+import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -30,9 +30,13 @@ public class UpdatePrototypeByIdUseCase {
 
 	private void validate(PrototypeModel prototypeModel) {
 		ofNullable(prototypeModel.getName())
-				.orElseThrow(IllegalAccessError::new);
+				.orElseThrow(() ->
+					new ApiRequestException(ApiRequestException.Type.MISSING_FIELD_EXCEPTION,
+						"Prototype name is missing"));
 		prototypeRepositoryPort.getPrototypeById(prototypeModel.getId())
-				.orElseThrow(EntityNotFoundException::new);
+				.orElseThrow(() ->
+					new ApiRequestException(ApiRequestException.Type.ENTITY_NOT_FOUND_EXCEPTION,
+						"Prototype not found by It's ID"));
 	}
 
 }

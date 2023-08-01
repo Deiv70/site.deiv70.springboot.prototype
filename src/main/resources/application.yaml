@@ -2,5 +2,5 @@ spring:
   config:
     import: optional:configserver:https://configserver.deiv70.site:8888
   profiles:
-#    default: dev
-    active: @spring.profiles.active@
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+#    active: @spring.profiles.active@

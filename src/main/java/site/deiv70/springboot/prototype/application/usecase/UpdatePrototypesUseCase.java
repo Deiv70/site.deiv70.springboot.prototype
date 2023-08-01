@@ -18,7 +18,7 @@ public class UpdatePrototypesUseCase {
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
 	public List<PrototypeModel> updatePrototypes(final List<PrototypeModel> prototypeModelList) {
-		List<PrototypeModel> updatedPrototypesList = new ArrayList<PrototypeModel>();
+		List<PrototypeModel> updatedPrototypesList = new ArrayList<>();
 
 		prototypeModelList.forEach(prototypeModel -> {
 			validate(prototypeModel);

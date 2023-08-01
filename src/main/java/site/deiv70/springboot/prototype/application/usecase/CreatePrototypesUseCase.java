@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
+import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,9 +16,9 @@ public class CreatePrototypesUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	public List<PrototypeModel> createPrototypes(final List<PrototypeModel> prototypeModelList) {
+	public List<PrototypeModel> execute(final List<PrototypeModel> prototypeModelList) {
 		if (!prototypeModelList.iterator().hasNext()) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		// Set Ids to random if not already set
@@ -27,7 +29,9 @@ public class CreatePrototypesUseCase {
 					}
 					// Assign new Id if it already exists
 					if (prototypeRepositoryPort.getPrototypeById(prototypeModel.getId()).isPresent()) {
-						prototypeModel.setId(UUID.randomUUID());
+						throw new ApiRequestException(ApiRequestException.Type.ID_ALREADY_USED_EXCEPTION,
+								"Prototype's ID already exists");
+						//prototypeModel.setId(UUID.randomUUID());
 					}
 				});
 

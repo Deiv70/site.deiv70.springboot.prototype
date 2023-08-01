@@ -15,7 +15,7 @@ class RestExceptionHandlerTest extends TestAbstract {
 	void handleApiRequestException() {
 		// Given
 		String message = "Invalid parameter";
-		ApiRequestException exception = new ApiRequestException(ApiRequestException.Type.INVALID_PARAMETER_EXCEPTION, message);
+		ApiRequestException exception = new ApiRequestException(ApiRequestException.Type.INVALID_FIELD_EXCEPTION, message);
 
 		// When
 		ResponseEntity<ApiErrorResponseDtoModel> responseEntity = restExceptionHandler.handleApiRequestException(exception);

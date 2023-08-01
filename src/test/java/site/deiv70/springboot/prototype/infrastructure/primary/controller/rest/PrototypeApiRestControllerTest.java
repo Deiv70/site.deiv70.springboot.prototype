@@ -109,7 +109,7 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		});
 
 		// Then
-		Assertions.assertEquals(ApiRequestException.Type.INVALID_PARAMETER_EXCEPTION, exception.getType());
+		Assertions.assertEquals(ApiRequestException.Type.INVALID_FIELD_EXCEPTION, exception.getType());
 		Assertions.assertEquals("Prototype id can't be null", exception.getMessage());
 		//ResponseEntity<ApiErrorResponseDtoModel> responseEntity = restExceptionHandler.handleApiRequestException(exception);
 		//Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -264,7 +264,7 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		List<PrototypeModel> prototypeModelList = prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList);
 
 		// When
-		Mockito.when(createPrototypesUseCase.createPrototypes(prototypeModelList))
+		Mockito.when(createPrototypesUseCase.execute(prototypeModelList))
 				.thenReturn(prototypeModelList);
 
 		// Then

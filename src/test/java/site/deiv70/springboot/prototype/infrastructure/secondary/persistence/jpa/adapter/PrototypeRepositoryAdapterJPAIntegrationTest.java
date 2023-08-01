@@ -27,27 +27,6 @@ class PrototypeRepositoryAdapterJPAIntegrationTest extends TestAbstract {
 		prototypeRepositoryAdapterJPA = new PrototypeRepositoryAdapterJPA(prototypeEntityJPARepository, prototypeEntityMapperJPA);
 	}
 
-//	@Autowired private DataSource dataSource;
-//	@Autowired private JdbcTemplate jdbcTemplate;
-//	@Autowired private EntityManager entityManager;
-
-//	@Test
-//	void injectedComponentsAreNotNull(){
-//		assertNotNull(dataSource);
-//		assertNotNull(jdbcTemplate);
-//		assertNotNull(entityManager);
-//		assertNotNull(prototypeRepositoryAdapterJPA);
-//	}
-
-//	@Test
-//	void test_restartable_db() {
-//		Assertions.assertTrue(jpaContainer.isRunning());
-//		Assertions.assertEquals("testuser", jpaContainer.getUsername());
-//		Assertions.assertEquals("testpwd", jpaContainer.getPassword());
-//		Assertions.assertEquals("testdb", jpaContainer.getDatabaseName());
-//		Assertions.assertEquals("jdbc:mariadb://localhost:" + jpaContainer.getMappedPort(3306) + "/testdb", jpaContainer.getJdbcUrl());
-//	}
-
 	@Test
 	void testCreatePrototype() {
 		PrototypeModel prototypeModel = easyRandom.nextObject(PrototypeModel.class);

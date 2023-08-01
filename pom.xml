@@ -274,6 +274,9 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+                    <environmentVariables>
+                        <SPRING_PROFILES_ACTIVE>${maven.env.profile}</SPRING_PROFILES_ACTIVE>
+                    </environmentVariables>
 				</configuration>
 			</plugin>
 
@@ -381,30 +384,36 @@
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
 			</plugin> -->
-
 		</plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 	</build>
 
 	<profiles>
         <profile>
             <id>dev</id>
-            <activation>
+            <!-- <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>
+            </activation> -->
             <properties>
-                <spring.profiles.active>dev</spring.profiles.active>
+                <maven.env.profile>dev</maven.env.profile>
             </properties>
         </profile>
         <profile>
             <id>pre</id>
             <properties>
-                <spring.profiles.active>pre</spring.profiles.active>
+                <maven.env.profile>pre</maven.env.profile>
             </properties>
         </profile>
         <profile>
             <id>pro</id>
             <properties>
-                <spring.profiles.active>pro</spring.profiles.active>
+                <maven.env.profile>pro</maven.env.profile>
             </properties>
         </profile>
 

@@ -3,6 +3,7 @@ package site.deiv70.springboot.prototype.application.usecase;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
+import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
 
 import java.util.UUID;
 
@@ -12,14 +13,16 @@ public class DeletePrototypeByIdUseCase {
 
 	private PrototypeRepositoryPort prototypeRepositoryPort;
 
-	public void deletePrototypeById(final UUID id) {
+	public void execute(final UUID id) {
 		validate(id);
 		prototypeRepositoryPort.deletePrototypeById(id);
 	}
 
 	private void validate(final UUID id) {
 		prototypeRepositoryPort.getPrototypeById(id)
-				.orElseThrow(IllegalAccessError::new);
+				.orElseThrow(() ->
+					new ApiRequestException(ApiRequestException.Type.ENTITY_NOT_FOUND_EXCEPTION,
+						"Prototype not found by It's ID"));
 	}
 
 }

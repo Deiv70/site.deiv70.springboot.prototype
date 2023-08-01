@@ -47,7 +47,7 @@ public class PrototypeApiRestController implements PrototypeApi {
 	public ResponseEntity<PrototypeDtoModel> getPrototypeById(UUID prototypeId) {
 		// 1. Always check parameters first
 		if (prototypeId == null) {	// It can't be empty because it's a UUID type
-			throw new ApiRequestException(ApiRequestException.Type.INVALID_PARAMETER_EXCEPTION,
+			throw new ApiRequestException(ApiRequestException.Type.INVALID_FIELD_EXCEPTION,
 				"Prototype id can't be null");
 			// return ResponseEntity.badRequest().build();
 		}
@@ -87,7 +87,7 @@ public class PrototypeApiRestController implements PrototypeApi {
 			return ResponseEntity.badRequest().build();
 		}
 
-		deletePrototypeByIdUseCase.deletePrototypeById(prototypeId);
+		deletePrototypeByIdUseCase.execute(prototypeId);
 
 		return ResponseEntity.ok().build();
 	}
@@ -131,7 +131,7 @@ public class PrototypeApiRestController implements PrototypeApi {
 		}
 
 		List<PrototypeDtoModel> usecaseResponseList = prototypeDtoMapper.toPrototypeDtoModelList(
-				createPrototypesUseCase.createPrototypes(
+				createPrototypesUseCase.execute(
 						prototypeDtoMapper.toPrototypeModelList(prototypeDtoModelList)));
 
 		// Return a responseEntity 200 with responseIterable if it's not empty, or else return a 400
@@ -146,7 +146,7 @@ public class PrototypeApiRestController implements PrototypeApi {
 			return ResponseEntity.badRequest().build();
 		}
 
-		deletePrototypesUseCase.deletePrototypesById(idDtoModelList);
+		deletePrototypesUseCase.execute(idDtoModelList);
 
 		return ResponseEntity.ok().build();
 	}

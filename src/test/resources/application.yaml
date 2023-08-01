@@ -2,6 +2,5 @@ spring:
   config:
     import: optional:configserver:https://configserver.deiv70.site:8888
   profiles:
-    #    default: testdev
-    active: test@spring.profiles.active@
+    active: test${SPRING_PROFILES_ACTIVE:dev}
     include: ${SPRING_APP_PROFILE_INCLUDE:testcontainers}
