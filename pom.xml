@@ -41,6 +41,8 @@
 		<encoding.reporting>${encoding}</encoding.reporting>
 		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+        <!-- Default Environment Profile (dev / pre / pro) -->
+        <maven.env.profile>dev</maven.env.profile>
 
 		<!-- SpringCloud: Needed for ConfigServer Import -->
 		<spring-cloud.version>2022.0.3</spring-cloud.version>
@@ -397,10 +399,8 @@
 	<profiles>
         <profile>
             <id>dev</id>
-            <!-- <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation> -->
             <properties>
+                <!-- Overwrite Environment Profile Variable -->
                 <maven.env.profile>dev</maven.env.profile>
             </properties>
         </profile>

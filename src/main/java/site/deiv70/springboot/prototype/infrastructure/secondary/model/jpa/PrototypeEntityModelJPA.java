@@ -3,8 +3,6 @@ package site.deiv70.springboot.prototype.infrastructure.secondary.model.jpa;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -33,7 +31,7 @@ import java.util.UUID;
 public class PrototypeEntityModelJPA {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
+	//@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
 	@Column(columnDefinition = "VARCHAR(30) NOT NULL")
@@ -45,12 +43,12 @@ public class PrototypeEntityModelJPA {
 	@OneToMany(mappedBy = "prototype")
 	private List<SubPrototypeEntityModelJPA> subPrototypeEntityModelJPAList;
 
-	// @CreationTimestamp(source = SourceType.DB)
+	// @CreationTimestamp(source = SourceType.DB) // Hibernate
 	@CreatedDate
 	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL")
 	private Instant createdAt;
 
-	// @UpdateTimestamp(source = SourceType.DB)
+	// @UpdateTimestamp(source = SourceType.DB) // Hibernate
 	@LastModifiedDate
 	@Column(name = "last_modified_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP")
 	private Instant lastModifiedAt;

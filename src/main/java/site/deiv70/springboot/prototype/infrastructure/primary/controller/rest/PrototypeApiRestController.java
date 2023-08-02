@@ -127,7 +127,8 @@ public class PrototypeApiRestController implements PrototypeApi {
 	@Override
 	public ResponseEntity<List<PrototypeDtoModel>> createPrototypes(List<PrototypeDtoModel> prototypeDtoModelList) {
 		if (prototypeDtoModelList.isEmpty()) {
-			return ResponseEntity.badRequest().build();
+			throw new ApiRequestException(ApiRequestException.Type.MISSING_BODY_EXCEPTION,
+					"Prototype request list can't be empty");
 		}
 
 		List<PrototypeDtoModel> usecaseResponseList = prototypeDtoMapper.toPrototypeDtoModelList(
@@ -143,7 +144,8 @@ public class PrototypeApiRestController implements PrototypeApi {
 	@Override
 	public ResponseEntity<Void> deletePrototypes(List<IdDtoModel> idDtoModelList) {
 		if (idDtoModelList.isEmpty()) {
-			return ResponseEntity.badRequest().build();
+			throw new ApiRequestException(ApiRequestException.Type.MISSING_BODY_EXCEPTION,
+					"Id list can't be empty");
 		}
 
 		deletePrototypesUseCase.execute(idDtoModelList);

@@ -1,0 +1,3 @@
+management:
+  server:
+    port: ${SPRING_MANAGEMENTPORT_PORT:9090}

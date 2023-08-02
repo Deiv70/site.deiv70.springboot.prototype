@@ -3,8 +3,6 @@ package site.deiv70.springboot.prototype.infrastructure.secondary.model.jpa;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -30,7 +28,7 @@ import java.util.UUID;
 public class SubPrototypeEntityModelJPA {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
 	@Column(columnDefinition = "VARCHAR(30) NOT NULL")

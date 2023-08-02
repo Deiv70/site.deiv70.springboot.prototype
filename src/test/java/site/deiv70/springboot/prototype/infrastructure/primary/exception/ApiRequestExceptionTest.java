@@ -7,7 +7,6 @@ import site.deiv70.springboot.prototype.common.TestAbstract;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ApiRequestExceptionTest extends TestAbstract {
-	private ApiRequestException apiRequestException;
 
 	@BeforeEach
 	void setUp() {

@@ -43,7 +43,7 @@ cop:
 springdoc:
 #  version: '@springdoc.version@'
   show-actuator: ${SPRING_DEV_SPRINGDOC_SHOW_ACTUATOR:true}
-  use-management-port: true
+  use-management-port: ${SPRING_DEV_SPRINGDOC_USE_MANAGEMENT_PORT:false}
 #  packages-to-scan: site.deiv70.springboot.openapitools, site.deiv70.springboot.application, site.deiv70.springboot.model, vnd.spring-boot.actuator
   swagger-ui:
     enabled: ${SPRING_DEV_SPRINGDOC_SWAGGER_ENABLED:true}
@@ -63,8 +63,6 @@ management:
         include: '*'
       base-path: ${SPRING_DEV_MANAGEMENT_PATH:/actuator}
 
-  server:
-    port: ${SPRING_DEV_MANAGEMENT_PORT:9090}
 
 server:
   port: ${SPRING_DEV_PORT:8080}
