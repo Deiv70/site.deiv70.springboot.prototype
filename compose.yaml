@@ -3,10 +3,13 @@ version: '3'
 services:
 
   jdbc_db:
-    image: ${SPRING_JDBC_DATABASE_CLIENT}:${SPRING_JDBC_DATABASE_CLIENT_VERSION}
+    image: ${SPRING_JDBC_DOCKER_IMAGE}:${SPRING_JDBC_DOCKER_IMAGE_VERSION}
     restart: unless-stopped
 #    hostname: db.prototype.springboot.local
     environment:
+      POSTGRES_DB: ${SPRING_JDBC_DATABASE_SCHEMA}
+      POSTGRES_USER: ${SPRING_JDBC_DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_JDBC_DATABASE_PASSWORD}
       MYSQL_DATABASE: ${SPRING_JDBC_DATABASE_SCHEMA}
       MYSQL_USER: ${SPRING_JDBC_DATABASE_USERNAME}
       MYSQL_PASSWORD: ${SPRING_JDBC_DATABASE_PASSWORD}
@@ -14,7 +17,7 @@ services:
     # Expose to the Host
     ports:
       # < Port exposed locally > : < Port running inside container >
-      - ${SPRING_JDBC_DATABASE_PORT}:3306
+      - ${SPRING_JDBC_DATABASE_PORT}:${SPRING_JDBC_DATABASE_DEFAULT_PORT}
     # Expose to the Docker Network
 #    expose:
 #      - '3306'

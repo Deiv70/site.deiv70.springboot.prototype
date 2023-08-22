@@ -27,17 +27,17 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 // TODO: Make Table name configurable
-@Table(name = "prototype")
+@Table(name = "prototype", indexes = {})
 public class PrototypeEntityModelJPA {
 
 	@Id
 	//@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@Column(columnDefinition = "VARCHAR(30) NOT NULL")
+	@Column(nullable = false, columnDefinition = "VARCHAR(30)")
 	private String name;
 
-	@Column(columnDefinition = "VARCHAR(100) NOT NULL")
+	@Column(nullable = false, columnDefinition = "VARCHAR(100)")
 	private String description;
 
 	@OneToMany(mappedBy = "prototype")
@@ -45,12 +45,12 @@ public class PrototypeEntityModelJPA {
 
 	// @CreationTimestamp(source = SourceType.DB) // Hibernate
 	@CreatedDate
-	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL")
+	@Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMPTZ")
 	private Instant createdAt;
 
 	// @UpdateTimestamp(source = SourceType.DB) // Hibernate
 	@LastModifiedDate
-	@Column(name = "last_modified_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP")
+	@Column(name = "last_modified_at", nullable = false, columnDefinition = "TIMESTAMPTZ")
 	private Instant lastModifiedAt;
 
 }

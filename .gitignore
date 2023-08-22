@@ -1,5 +1,7 @@
 #HELP.md
+
 .env
+src/main/resources/ddl
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

@@ -31,10 +31,10 @@ public class SubPrototypeEntityModelJPA {
 	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@Column(columnDefinition = "VARCHAR(30) NOT NULL")
+	@Column(nullable = false, columnDefinition = "VARCHAR(30)")
 	private String name;
 
-	@Column(columnDefinition = "VARCHAR(100) NOT NULL")
+	@Column(nullable = false, columnDefinition = "VARCHAR(100)")
 	private String description;
 
 	@ManyToOne
