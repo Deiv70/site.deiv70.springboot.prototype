@@ -10,9 +10,29 @@ import site.deiv70.springboot.prototype.infrastructure.primary.dto.ApiErrorRespo
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ApiRequestException.class)
-	public ResponseEntity<ApiErrorResponseDtoModel> handleApiRequestException(ApiRequestException ex) {
-		ApiErrorResponseDtoModel apiErrorResponseDtoModel = ex.getHttpResponse();
-		return ResponseEntity.status(apiErrorResponseDtoModel.getCode()).body(apiErrorResponseDtoModel);
+	protected ResponseEntity<ApiErrorResponseDtoModel> handleApiRequestException(ApiRequestException ex) {
+		ApiErrorResponseDtoModel apiErrorResponseDtoModel = ex.getApiErrorResponseDtoModel();
+
+		return ResponseEntity
+			.status(ex.getHttpStatus().value())
+			.body(apiErrorResponseDtoModel);
 	}
+
+	/*
+	@Override
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+		MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request
+	)  {
+		ApiErrorResponseDtoModel apiErrorResponseDtoModel = new ApiErrorResponseDtoModel();
+		//apiErrorResponseDtoModel.setSpringException(ex);
+
+		ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
+			apiErrorResponseDtoModel.addMessagesItem(fieldError.getDefaultMessage());
+		});
+
+		return new ResponseEntity<>(apiErrorResponseDtoModel, HttpStatus.BAD_REQUEST);
+	}
+	*/
 
 }

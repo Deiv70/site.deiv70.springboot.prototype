@@ -24,7 +24,7 @@ class ApiRequestExceptionTest extends TestAbstract {
 		// Then
 		assertEquals(message, apiRequestException.getMessage());
 		assertEquals(type, apiRequestException.getType());
-		assertEquals(type.getHttpCode(), apiRequestException.getHttpResponse().getCode());
+		assertEquals(type.getHttpCode(), apiRequestException.getApiErrorResponseDtoModel().getCode());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ class ApiRequestExceptionTest extends TestAbstract {
 		// Then
 		assertEquals(message, apiRequestException.getMessage());
 		assertEquals(type, apiRequestException.getType());
-		assertEquals(type.getHttpCode(), apiRequestException.getHttpResponse().getCode());
+		assertEquals(type.getHttpCode(), apiRequestException.getApiErrorResponseDtoModel().getCode());
 		assertEquals(exceptionMessage, apiRequestException.getException().getMessage());
 	}
 
@@ -59,7 +59,7 @@ class ApiRequestExceptionTest extends TestAbstract {
 		// Then
 		assertEquals(message, apiRequestException.getMessage());
 		assertEquals(type, apiRequestException.getType());
-		assertEquals(type.getHttpCode(), apiRequestException.getHttpResponse().getCode());
+		assertEquals(type.getHttpCode(), apiRequestException.getApiErrorResponseDtoModel().getCode());
 		assertEquals(exceptionMessage, apiRequestException.getException().getMessage());
 	}
 

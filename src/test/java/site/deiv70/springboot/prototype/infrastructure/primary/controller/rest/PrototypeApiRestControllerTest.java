@@ -285,9 +285,10 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		//).thenReturn(null);
 
 		// Then
-		ResponseEntity<List<PrototypeDtoModel>> responseEntity =
-				prototypeApiRestController.createPrototypes(prototypeDtoModelList);
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class, () -> {
+			prototypeApiRestController.createPrototypes(prototypeDtoModelList);
+		});
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getApiErrorResponseDtoModel().getCode());
 	}
 
 	@Test
@@ -311,8 +312,10 @@ class PrototypeApiRestControllerTest extends TestAbstract {
 		// When
 
 		// Then
-		ResponseEntity<Void> responseEntity = prototypeApiRestController.deletePrototypes(idDtoModelList);
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class, () -> {
+			prototypeApiRestController.deletePrototypes(idDtoModelList);
+		});
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getApiErrorResponseDtoModel().getCode());
 	}
 
 	@Test

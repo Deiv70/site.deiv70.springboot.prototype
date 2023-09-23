@@ -25,7 +25,7 @@ import java.util.UUID;
 @Entity
 // TODO: Make Table name configurable
 @Table(name = "subprototype")
-public class SubPrototypeEntityModelJPA {
+public class SubprototypeEntityModelJPA {
 
 	@Id
 	//@GeneratedValue(strategy = GenerationType.AUTO)

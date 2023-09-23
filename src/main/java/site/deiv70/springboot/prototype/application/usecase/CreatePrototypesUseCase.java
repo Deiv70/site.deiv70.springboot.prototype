@@ -1,20 +1,23 @@
 package site.deiv70.springboot.prototype.application.usecase;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import site.deiv70.springboot.prototype.domain.model.entity.PrototypeModel;
 import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.PrototypeRepositoryPort;
+import site.deiv70.springboot.prototype.domain.port.infraestructure.secondary.SubprototypeRepositoryPort;
 import site.deiv70.springboot.prototype.infrastructure.primary.exception.ApiRequestException;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class CreatePrototypesUseCase {
 
-	private PrototypeRepositoryPort prototypeRepositoryPort;
+	private final PrototypeRepositoryPort prototypeRepositoryPort;
+	private final SubprototypeRepositoryPort subprototypeRepositoryPort;
 
 	public List<PrototypeModel> execute(final List<PrototypeModel> prototypeModelList) {
 		if (!prototypeModelList.iterator().hasNext()) {
@@ -29,10 +32,19 @@ public class CreatePrototypesUseCase {
 					}
 					// Assign new Id if it already exists
 					if (prototypeRepositoryPort.getPrototypeById(prototypeModel.getId()).isPresent()) {
-						throw new ApiRequestException(ApiRequestException.Type.ID_ALREADY_USED_EXCEPTION,
-								"Prototype's ID already exists");
+						throw new ApiRequestException(
+							HttpStatus.BAD_REQUEST,
+                            Collections.singletonList("Prototype's ID already exists"));
 						//prototypeModel.setId(UUID.randomUUID());
 					}
+					prototypeModel.getSubprototypeModelList().forEach(
+						subprototypeModel -> subprototypeRepositoryPort.getSubprototypeById(subprototypeModel.getId())
+								.ifPresentOrElse(
+										subprototypeModel1 -> {
+											throw new ApiRequestException(HttpStatus.NOT_FOUND,
+                                                    Collections.singletonList("Subprototype's ID NOT Found"));
+										},
+										() -> subprototypeModel.setId(UUID.randomUUID())));
 				});
 
 		return prototypeRepositoryPort.createPrototypes(prototypeModelList);

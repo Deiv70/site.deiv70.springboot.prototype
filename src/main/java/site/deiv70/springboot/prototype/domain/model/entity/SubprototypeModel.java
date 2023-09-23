@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubPrototypeModel implements Serializable {
+public class SubprototypeModel implements Serializable {
 
 	private UUID id;
 	private String name;

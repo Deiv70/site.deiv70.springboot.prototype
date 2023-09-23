@@ -41,7 +41,7 @@ public class PrototypeEntityModelJPA {
 	private String description;
 
 	@OneToMany(mappedBy = "prototype")
-	private List<SubPrototypeEntityModelJPA> subPrototypeEntityModelJPAList;
+	private List<SubprototypeEntityModelJPA> subprototypeEntityModelJPAList;
 
 	// @CreationTimestamp(source = SourceType.DB) // Hibernate
 	@CreatedDate

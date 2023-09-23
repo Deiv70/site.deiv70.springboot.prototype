@@ -22,7 +22,7 @@ class RestExceptionHandlerTest extends TestAbstract {
 
 		// Then
 		assertNotNull(responseEntity);
-		assertEquals(exception.getHttpResponse(), responseEntity.getBody());
+		assertEquals(exception.getApiErrorResponseDtoModel(), responseEntity.getBody());
 		assertEquals(exception.getType().getHttpCode(), responseEntity.getStatusCode().value());
 	}
 
